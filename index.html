@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GeneSwitch : ORGANISME-0</title>
+<style>
+@font-face{font-family:"PS2P";src:url(data:font/woff2;base64,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) format("woff2");font-display:swap}
+:root{
+  --bg:#0a0a16; --bg2:#12122a; --panel:#15152e; --line:#2c2c5a; --ink:#ecebff; --muted:#a3a3cf;
+  --pink:#ff2e88; --cyan:#19f0ff; --yellow:#ffe600; --green:#39ff88; --red:#ff4d5e; --violet:#8a5cff;
+  --px:"PS2P","Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#241049 0%,transparent 60%),radial-gradient(900px 500px at 0% 100%,#0b2a3f 0%,transparent 60%),var(--bg);
+  color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:90;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 3px);
+  box-shadow:inset 0 0 140px rgba(0,0,0,.55);opacity:.55}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:var(--px);font-weight:400;line-height:1.5;margin:0}
+canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+.hud{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(10,10,22,.92);border-bottom:2px solid var(--line);flex-wrap:wrap}
+.logo{font-family:var(--px);font-size:14px;color:var(--cyan);text-shadow:2px 2px 0 var(--pink);cursor:pointer;background:none;border:0;padding:6px 4px}
+.hud .sp{flex:1}
+.btn{font-family:var(--px);font-size:11px;line-height:1.4;text-transform:uppercase;background:var(--bg2);color:var(--ink);border:3px solid var(--cyan);padding:12px 14px;min-height:46px;box-shadow:4px 4px 0 var(--pink);transition:transform .08s,box-shadow .08s}
+.btn:hover{background:#1c1c40}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--pink)}
+.btn.pri{background:var(--pink);border-color:#fff;color:#fff;box-shadow:4px 4px 0 var(--cyan)}
+.btn.small{font-size:9px;padding:8px 10px;min-height:46px}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.btn.on{background:var(--cyan);color:#06121c;border-color:#fff}
+main{max-width:1040px;margin:0 auto;padding:16px 14px 20px}
+.panel{background:var(--panel);border:2px solid var(--line);padding:14px;position:relative}
+.panel::before{content:"";position:absolute;left:-2px;top:-2px;width:14px;height:14px;border-left:4px solid var(--cyan);border-top:4px solid var(--cyan)}
+.panel::after{content:"";position:absolute;right:-2px;bottom:-2px;width:14px;height:14px;border-right:4px solid var(--pink);border-bottom:4px solid var(--pink)}
+.tag{font-family:var(--px);font-size:10px;color:var(--yellow);letter-spacing:1px;margin-bottom:8px}
+.dim{color:var(--muted)}
+.small{font-size:.85rem}
+/* title */
+.title{text-align:center;padding:30px 0 10px}
+.glitch{font-family:var(--px);font-size:clamp(26px,7vw,56px);color:var(--ink);position:relative;display:inline-block;text-shadow:3px 3px 0 var(--pink),-3px -3px 0 var(--cyan);margin:6px 0 14px;animation:gl 4s infinite steps(1)}
+@keyframes gl{0%,92%,100%{transform:none}93%{transform:translate(-3px,1px)}94%{transform:translate(3px,-1px)}95%{transform:translate(-2px,0)}96%{transform:none}}
+.sub{font-family:var(--px);font-size:11px;line-height:2;color:var(--cyan);max-width:640px;margin:0 auto 18px}
+.modes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+.modedesc{max-width:560px;margin:0 auto;color:var(--muted);font-size:.92rem}
+/* dialogue */
+.mendel{display:flex;gap:12px}
+.mendel p{margin:0;min-height:3.2em}
+.typed::after{content:"_";animation:blink 1s steps(1) infinite;color:var(--cyan)}
+@keyframes blink{50%{opacity:0}}
+.speaker{font-family:var(--px);font-size:10px;color:var(--pink);margin-bottom:6px}
+/* nucleus */
+.nuc{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;margin:10px 0}
+.bulb{background:#0d0d20;border:2px solid #2a2a50;padding:2px 0 2px;overflow:hidden;color:#5a5a8a;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0;min-height:46px}
+.bulb svg{width:100%;height:auto;display:block}
+.bulb i{font:normal 9px/1.2 "Courier New",monospace;color:#8c8cc0;margin-top:1px;word-break:break-all}
+button.bulb:hover{border-color:var(--cyan)}
+.bulb.on{color:var(--cyan);border-color:var(--cyan);background:#06222c;box-shadow:0 0 10px rgba(25,240,255,.35)}
+.bulb.hk{color:var(--yellow);border-color:var(--yellow);background:#262006;box-shadow:0 0 10px rgba(255,230,0,.25)}
+.bulb.id{color:var(--green);border-color:var(--green);background:#062616;box-shadow:0 0 12px rgba(57,255,136,.4)}
+.legendrow{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.legendrow b{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px}
+/* hub */
+.hub{display:grid;grid-template-columns:240px 1fr;gap:16px}
+.creature{text-align:center}
+.orgsvg{width:100%;max-width:210px;margin:4px auto 8px}
+.orgsvg svg{width:100%;height:auto;display:block;overflow:visible}
+.genome{border:2px solid var(--cyan);background:#0a0a1e;padding:8px 10px 4px;margin:10px 0;box-shadow:0 0 14px rgba(25,240,255,.18)}
+.gtag{font-family:var(--px);font-size:9px;line-height:1.6;color:var(--cyan);margin-bottom:2px}
+.meter{font-family:var(--px);font-size:9px;line-height:1.8;color:var(--cyan)}
+.missions{display:flex;flex-direction:column;gap:10px}
+.mission{display:flex;gap:12px;align-items:center;text-align:left;background:var(--bg2);border:2px solid var(--line);padding:10px 12px;min-height:56px;width:100%}
+.mission .no{font-family:var(--px);font-size:11px;color:var(--yellow);width:28px;flex:none}
+.mission .nm{font-family:var(--px);font-size:11px;line-height:1.5;flex:1}
+.mission .nm small{display:block;font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin-top:2px}
+.mission .st{font-family:var(--px);font-size:10px;color:var(--cyan)}
+.mission.done{border-color:var(--green)}
+.mission.done .st{color:var(--green)}
+.mission.open{border-color:var(--pink);box-shadow:0 0 14px rgba(255,46,136,.35)}
+.mission.lock{opacity:.45}
+/* board */
+.b-top{display:grid;grid-template-columns:200px 1fr;gap:14px;margin-bottom:14px}
+.sprite{text-align:center}
+.sprite canvas{width:168px;height:168px;display:block;margin:0 auto}
+.sprite.alive canvas{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.sprite .lbl{font-family:var(--px);font-size:9px;line-height:1.6;margin-top:6px;color:var(--cyan)}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{font-family:var(--px);font-size:9px;border:2px solid var(--line);padding:6px 8px;background:var(--bg2);color:var(--ink)}
+.b-main{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel h3{font-size:11px;color:var(--cyan);margin-bottom:10px}
+.slots{display:flex;flex-direction:column;gap:8px}
+.slot{display:flex;gap:10px;align-items:center;text-align:left;background:var(--bg2);border:2px dashed #4a4a8a;padding:10px;min-height:56px;width:100%}
+.slot .n{font-family:var(--px);font-size:10px;color:var(--yellow);flex:none}
+.slot .clue{flex:1;font-size:.95rem}
+.slot .val{font-family:var(--px);font-size:9px;color:var(--green);text-align:right;flex:none;max-width:42%;line-height:1.5}
+.slot.sel{border-color:var(--yellow);box-shadow:0 0 12px rgba(255,230,0,.4)}
+.slot.ok{border:2px solid var(--green);background:#062616}
+.slot.ok .clue{color:#bdf5d4}
+.hand{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.card{background:var(--bg2);border:2px solid var(--violet);padding:8px 10px;min-height:68px;position:relative;cursor:pointer}
+.card .sym{font-family:var(--px);font-size:10px;color:var(--yellow)}
+.card .pn{display:block;font-weight:700;font-size:.9rem;margin-top:4px;line-height:1.25;padding-right:22px}
+.card .fn{display:block;font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.3}
+.card .info{position:absolute;right:4px;top:4px;width:30px;height:30px;border:2px solid var(--cyan);background:#06222c;color:var(--cyan);font-family:var(--px);font-size:10px;padding:0}
+.arch .card .fn{display:none}
+.arch .card.open .fn{display:block}
+.explorer .card .info{display:none}
+.card.sel{border-color:var(--yellow);box-shadow:0 0 14px rgba(255,230,0,.5);background:#262006}
+.card.used{display:none}
+.fb{margin-top:10px;min-height:3.2em;padding:10px 12px;border-left:5px solid var(--line);background:#0d0d20;font-size:.95rem}
+.fb.good{border-color:var(--green);color:#c8ffe0}
+.fb.bad{border-color:var(--red);color:#ffd0d5}
+.fb b{font-family:var(--px);font-size:10px;display:block;margin-bottom:4px}
+.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translate(-5px,0)}40%{transform:translate(5px,0)}60%{transform:translate(-3px,0)}80%{transform:translate(3px,0)}}
+.flash{animation:flash .5s}
+@keyframes flash{0%{box-shadow:0 0 0 rgba(255,77,94,0)}40%{box-shadow:0 0 22px rgba(255,77,94,.9)}100%{box-shadow:none}}
+/* reveal */
+.reveal h2{color:var(--green);font-size:16px;text-shadow:2px 2px 0 #064}
+.big{font-family:var(--px);font-size:22px;color:var(--yellow)}
+.grade{font-family:var(--px);font-size:34px;color:var(--pink);text-shadow:3px 3px 0 var(--cyan)}
+.callout{border-left:5px solid var(--cyan);background:#06222c;padding:10px 12px;margin:12px 0}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(3,3,12,.82);z-index:80;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px 12px}
+.modal{background:var(--panel);border:3px solid var(--cyan);box-shadow:6px 6px 0 var(--pink);max-width:760px;width:100%;padding:18px 20px;margin:auto}
+.modal h2{font-size:15px;color:var(--cyan);margin-bottom:8px}
+.modal h3{font-size:11px;color:var(--yellow);margin:16px 0 6px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.pair{display:flex;gap:12px;flex-wrap:wrap}
+.pair>div{flex:1 1 240px;border:2px solid var(--line);padding:10px;text-align:center}
+.pair svg{width:100%;max-width:220px;height:auto}
+.pair .off{color:#8a8ab5}.pair .on{color:var(--cyan)}
+/* expert */
+.exgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:10px}
+.sw{display:flex;gap:10px;align-items:center;text-align:left;background:var(--bg2);border:2px solid #34346a;padding:8px;min-height:64px;color:#8a8ab5}
+.sw svg{width:104px;height:auto;flex:none}
+.sw .t{font-size:.85rem;color:var(--ink);line-height:1.25}
+.sw .t b{display:block;font-family:var(--px);font-size:9px;color:var(--yellow);margin-bottom:3px}
+.sw[aria-checked=true]{border-color:var(--cyan);background:#06222c;color:var(--cyan)}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(10,10,22,.96);border-top:2px solid var(--line);padding:8px 14px calc(8px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+input[type=search]{background:#0d0d20;color:var(--ink);border:2px solid var(--line);padding:10px;min-height:46px;width:100%;font:inherit}
+.site-foot{max-width:1040px;margin:20px auto 80px;padding:10px 14px 0;border-top:1px solid var(--line);display:flex;gap:12px;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;font-size:.8rem;color:var(--muted);position:relative;z-index:2}
+.site-foot a{color:var(--muted)}
+.cc{display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:var(--muted)}
+.cc span{font-family:var(--px);font-size:9px;margin-left:6px}
+.cc:hover{color:var(--cyan)}
+.site-foot .sig{margin-left:auto;text-align:right;font-family:var(--px);font-size:11px;color:var(--cyan);text-shadow:2px 2px 0 var(--pink)}
+ul.plain{padding-left:20px}
+.row2{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+@media (max-width:820px){
+  .hub{grid-template-columns:1fr}
+  .orgsvg{max-width:150px}
+  .b-top{grid-template-columns:1fr}
+  .sprite canvas{width:120px;height:120px}
+  .b-main{grid-template-columns:1fr}
+  .hud .btn.small{padding:8px 8px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.typed::after{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="crt" aria-hidden="true"></div>
+<header class="hud">
+  <button class="logo" data-go="title" type="button">GENESWITCH</button>
+  <div class="sp"></div>
+  <button class="btn small" data-go="hub" type="button" id="btnHub">Missions</button>
+  <button class="btn small" data-act="memo" type="button">Mémo</button>
+  <button class="btn small" data-act="sound" type="button" id="btnSound">Son</button>
+  <button class="btn small" data-go="about" type="button">Infos</button>
+</header>
+<main id="app"></main>
+<footer class="site-foot">
+  <a class="cc" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank" rel="noopener" title="Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.2 9.4a2.6 2.6 0 1 0 0 5.2M16.2 9.4a2.6 2.6 0 1 0 0 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.6" r="1.7" fill="currentColor"/><path d="M9.4 10.4h5.2v4.4h-1.4v3.2h-2.4v-3.2H9.4z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14.6 9.6c-.6-1-1.6-1.4-2.7-1.4-1.7 0-2.9 1.6-2.9 3.8s1.2 3.8 2.9 3.8c1.1 0 2.1-.5 2.7-1.4M12 5.8v12.4M5.2 18.8 18.8 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.2 10.2A4.6 4.6 0 0 0 8 9.4M7.8 13.8A4.6 4.6 0 0 0 16 14.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8 6.8v3.2h3.2M16 17.2v-3.2h-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>CC BY-NC-SA</span></a>
+  <div class="sig">M. Scansetti</div>
+</footer>
+<div id="modal"></div>
+<script>
+var DATA={"genes": [{"id": "ATP5F1A", "name": "ATP synthase (sous-unité α)", "fn": "Enzyme des mitochondries qui fabrique l'ATP, la monnaie d'énergie de la cellule.", "where": "Cellules à mitochondries (plus abondante dans certains tissus)", "group": "hk"}, {"id": "POLR2A", "name": "ARN polymérase II", "fn": "Copie les gènes en ARN messagers (transcription).", "where": "Cellules à noyau (plus abondante dans certains tissus)", "group": "hk"}, {"id": "RPL13A", "name": "Protéine du ribosome", "fn": "Entre dans la composition des ribosomes, qui fabriquent les protéines à partir des ARN messagers.", "where": "Toutes les cellules qui fabriquent des protéines", "group": "hk"}, {"id": "ACTB", "name": "β-actine", "fn": "Forme les filaments d'actine du cytosquelette : forme de la cellule et circulation interne.", "where": "Toutes les cellules, à des niveaux variables", "group": "hk"}, {"id": "GAPDH", "name": "Enzyme de la glycolyse", "fn": "Dégrade le glucose pour en tirer de l'énergie.", "where": "Toutes les cellules, à des niveaux variables", "group": "hk"}, {"id": "PSMB5", "name": "Protéasome (sous-unité β5)", "fn": "Découpe les protéines usagées ou abîmées pour recycler leurs éléments.", "where": "Toutes les cellules", "group": "hk"}, {"id": "ATP1A1", "name": "Pompe Na⁺/K⁺ (sous-unité α1)", "fn": "Fait sortir du sodium et entrer du potassium : maintient l'équilibre électrique de la membrane.", "where": "Toutes les cellules (plus abondante dans certains tissus)", "group": "hk"}, {"id": "XRCC1", "name": "Protéine de réparation de l'ADN", "fn": "Aide à réparer les cassures d'un brin d'ADN.", "where": "Toutes les cellules à noyau", "group": "hk"}, {"id": "KRT14", "name": "Kératine 14", "fn": "Forme les filaments solides des kératinocytes de la couche profonde de l'épiderme.", "where": "Épiderme, couche profonde", "group": "kerat"}, {"id": "KRT10", "name": "Kératine 10", "fn": "Forme les filaments des kératinocytes qui se différencient en montant vers la surface.", "where": "Épiderme, couches supérieures", "group": "kerat"}, {"id": "FLG", "name": "Filaggrine", "fn": "Regroupe les filaments de kératine en un réseau serré ; participe à la barrière de la peau.", "where": "Épiderme, couches supérieures", "group": "kerat"}, {"id": "TYR", "name": "Tyrosinase", "fn": "Enzyme qui lance la fabrication du pigment brun, la mélanine.", "where": "Mélanocytes (et épithélium pigmentaire de la rétine)", "group": "melan"}, {"id": "DCT", "name": "Dopachrome tautomérase", "fn": "Enzyme qui intervient plus loin dans la fabrication de la mélanine.", "where": "Mélanocytes", "group": "melan"}, {"id": "MLANA", "name": "Melan-A", "fn": "Protéine des mélanosomes, les petits compartiments où se fabrique la mélanine.", "where": "Mélanocytes", "group": "melan"}, {"id": "HBB", "name": "Globine β", "fn": "Constituant de l'hémoglobine, qui fixe l'oxygène puis le libère plus loin.", "where": "Érythroblastes en maturation", "group": "ery"}, {"id": "ALAS2", "name": "ALAS2", "fn": "Première enzyme de la fabrication de l'hème, le groupe à fer de l'hémoglobine.", "where": "Érythroblastes", "group": "ery"}, {"id": "SPTA1", "name": "Spectrine α", "fn": "Forme un filet sous la membrane et donne sa forme à la cellule.", "where": "Érythroblastes", "group": "ery"}, {"id": "CA1", "name": "Anhydrase carbonique 1", "fn": "Transforme le CO₂ en bicarbonate, et inversement.", "where": "Lignée des globules rouges", "group": "ery"}, {"id": "INS", "name": "Insuline", "fn": "Hormone qui fait baisser la glycémie en favorisant l'entrée du glucose dans les cellules et son stockage.", "where": "Cellules β des îlots de Langerhans", "group": "beta"}, {"id": "GCK", "name": "Glucokinase", "fn": "Capteur de glucose : s'active quand le taux de sucre monte.", "where": "Cellules β (et aussi le foie)", "group": "beta"}, {"id": "PCSK1", "name": "Convertase 1", "fn": "Découpe le précurseur de l'insuline pour obtenir l'hormone active.", "where": "Cellules β et autres cellules endocrines", "group": "beta"}, {"id": "IAPP", "name": "Amyline", "fn": "Hormone sécrétée en même temps que l'insuline.", "where": "Cellules β", "group": "beta"}, {"id": "MYH2", "name": "Myosine 2 (chaîne lourde)", "fn": "Moteur moléculaire qui tire sur l'actine pour contracter le muscle (fibres rapides).", "where": "Fibres musculaires squelettiques rapides", "group": "musc"}, {"id": "TNNT3", "name": "Troponine T rapide", "fn": "Commande la contraction du muscle en réponse au calcium.", "where": "Fibres musculaires squelettiques rapides", "group": "musc"}, {"id": "ATP2A1", "name": "Pompe à calcium du réticulum", "fn": "Remet le calcium en réserve après la contraction, ce qui permet au muscle de se relâcher.", "where": "Fibres musculaires squelettiques rapides", "group": "musc"}, {"id": "DMD", "name": "Dystrophine", "fn": "Relie le cytosquelette à la membrane de la fibre pour qu'elle résiste aux contractions.", "where": "Muscles (aussi cœur et cerveau)", "group": "musc"}, {"id": "SYT1", "name": "Synaptotagmine 1", "fn": "Capteur de calcium qui déclenche la libération du neurotransmetteur à la synapse.", "where": "Neurones", "group": "neur"}, {"id": "NEFL", "name": "Neurofilament léger", "fn": "Filaments qui soutiennent l'axone, le long prolongement du neurone.", "where": "Neurones", "group": "neur"}, {"id": "SYN1", "name": "Synapsine I", "fn": "Maintient les vésicules de neurotransmetteur prêtes à être libérées.", "where": "Neurones", "group": "neur"}, {"id": "MBP", "name": "Protéine basique de la myéline", "fn": "Constituant de la gaine de myéline qui entoure les axones.", "where": "Oligodendrocytes (cerveau et moelle épinière)", "group": "oligo"}, {"id": "PLP1", "name": "Protéolipide 1", "fn": "Protéine principale de la myéline du cerveau et de la moelle épinière.", "where": "Oligodendrocytes (cerveau et moelle épinière)", "group": "oligo"}, {"id": "MOG", "name": "Glycoprotéine de la myéline", "fn": "Protéine de surface de la myéline fabriquée par les oligodendrocytes.", "where": "Oligodendrocytes (cerveau et moelle épinière)", "group": "oligo"}, {"id": "RHO", "name": "Rhodopsine", "fn": "Détecte la lumière dans les bâtonnets, les cellules de la vision en lumière faible.", "where": "Bâtonnets de la rétine", "group": "x"}, {"id": "PGA3", "name": "Pepsinogène A", "fn": "Précurseur de la pepsine, enzyme qui digère les protéines.", "where": "Estomac", "group": "x"}, {"id": "ALB", "name": "Albumine", "fn": "Protéine très abondante du plasma sanguin.", "where": "Foie", "group": "x"}, {"id": "CRYAA", "name": "Cristalline αA", "fn": "Protéine qui rend le cristallin transparent et protège les autres protéines.", "where": "Cristallin de l'œil", "group": "x"}, {"id": "LCT", "name": "Lactase", "fn": "Enzyme qui digère le lactose du lait.", "where": "Intestin grêle", "group": "x"}, {"id": "MYH6", "name": "Myosine α cardiaque", "fn": "Moteur moléculaire de la contraction du cœur.", "where": "Muscle cardiaque", "group": "x"}, {"id": "ACTC1", "name": "Actine α cardiaque", "fn": "Filaments d'actine de la contraction du cœur.", "where": "Muscle cardiaque", "group": "x"}, {"id": "GFAP", "name": "Protéine gliale fibrillaire acide", "fn": "Forme les filaments des astrocytes, cellules de soutien du cerveau.", "where": "Astrocytes (cellules gliales)", "group": "x"}], "cells": [{"key": "kerat", "name": "Kératinocyte", "mission": "Construis la cellule principale de l'épiderme, la couche externe de la peau.", "fiche": "Cette cellule forme une barrière solide. Elle naît dans la couche profonde, puis se différencie en montant vers la surface, où elle finit par être éliminée et remplacée.", "won": "Les kératinocytes forment l'essentiel de l'épiderme. Ceux de la couche profonde fabriquent surtout la kératine 14 ; en montant, ils fabriquent d'autres kératines, comme la 10, puis la filaggrine.", "dyk": "Les mélanocytes vivent dans la même couche profonde de l'épiderme. Ils ont exactement le même génome que les kératinocytes, mais n'allument pas les mêmes gènes.", "bonus": false}, {"key": "melan", "name": "Mélanocyte", "mission": "Construis la cellule de l'épiderme qui fabrique un pigment brun.", "fiche": "Cette cellule est bien moins nombreuse que les kératinocytes dans l'épiderme. Elle fabrique la mélanine et la transmet aux kératinocytes voisins par ses prolongements.", "won": "La tyrosinase lance la fabrication de la mélanine. On la trouve surtout dans les mélanocytes, et aussi dans l'épithélium pigmentaire de la rétine.", "dyk": "La mélanine déposée dans les kératinocytes protège leur ADN des dégâts causés par les UV. Les kératinocytes n'ont pas besoin de fabriquer eux-mêmes la tyrosinase.", "bonus": false}, {"key": "ery", "name": "Érythroblaste", "mission": "Construis le précurseur du globule rouge, dans la moelle osseuse.", "fiche": "Cette cellule a encore un noyau. Elle accumule de l'hémoglobine et se prépare à devenir un globule rouge.", "won": "L'érythroblaste fabrique l'hémoglobine (globine et hème), un filet de spectrine pour sa forme, et une enzyme qui échange le CO₂ avec le bicarbonate.", "dyk": "Le globule rouge mature de mammifère n'a plus de noyau, donc plus d'ADN, ni de mitochondries, ni de ribosomes. Il produit son énergie uniquement par glycolyse. Chez les poissons, les reptiles, les amphibiens et les oiseaux, il garde son noyau.", "bonus": false}, {"key": "beta", "name": "Cellule β du pancréas", "mission": "Construis la cellule qui détecte le sucre du sang et fabrique l'hormone qui le fait baisser.", "fiche": "Cette cellule vit dans les îlots de Langerhans du pancréas, à côté d'autres cellules qui fabriquent d'autres hormones.", "won": "La cellule β détecte le glucose (glucokinase), fabrique l'insuline sous forme de précurseur qu'elle découpe (convertase 1), et sécrète aussi de l'amyline.", "dyk": "L'insuline ne stocke pas elle-même le glucose : elle fait baisser la glycémie en favorisant son entrée dans les cellules du foie, du muscle et du tissu adipeux, où il est stocké.", "bonus": false}, {"key": "musc", "name": "Fibre musculaire squelettique", "mission": "Construis la longue cellule qui se contracte pour faire bouger les os.", "fiche": "Cette cellule est très allongée et contient plusieurs noyaux. Elle se contracte quand le calcium arrive.", "won": "La myosine tire sur l'actine, la troponine commande la contraction par le calcium, la pompe à calcium permet le relâchement, et la dystrophine protège la fibre.", "dyk": "Le muscle du cœur utilise d'autres versions des mêmes protéines (myosine α cardiaque, actine cardiaque). Même génome, mais pas les mêmes gènes allumés. Des mutations du gène de la dystrophine causent la myopathie de Duchenne.", "bonus": false}, {"key": "neur", "name": "Neurone", "mission": "Construis la cellule qui transmet des messages à d'autres cellules par des synapses.", "fiche": "Cette cellule a un corps, des dendrites et un long axone. Elle communique en libérant des neurotransmetteurs.", "won": "Le neurone soutient son axone avec des neurofilaments, stocke les vésicules à la synapse (synapsine) et déclenche leur libération avec un capteur de calcium (synaptotagmine).", "dyk": "La gaine de myéline n'est pas fabriquée par le neurone : elle vient d'autres cellules, les oligodendrocytes dans le cerveau et la moelle épinière, et les cellules de Schwann dans les nerfs.", "bonus": false}, {"key": "oligo", "name": "Oligodendrocyte", "mission": "Bonus : construis la cellule qui fabrique la myéline du cerveau et de la moelle épinière.", "fiche": "Cette cellule gliale n'envoie pas de messages. Elle enroule ses prolongements autour des axones des neurones.", "won": "Les protéines MBP, PLP1 et MOG sont des constituants de la myéline, produits par les oligodendrocytes et non par les neurones.", "dyk": "Dans la réalité, les frontières sont moins nettes : certains oligodendrocytes jeunes fabriquent aussi un canal sodium (Nav1.2) que l'on associe plutôt aux neurones. Dans le jeu, on retient la signature principale de chaque cellule.", "bonus": true}], "clues": {"KRT14": "Les cellules de la couche profonde doivent résister aux frottements et aux chocs.", "KRT10": "En montant vers la surface, les cellules changent de type de filaments pour continuer à se renforcer.", "FLG": "À la surface, les cellules aplaties doivent former une barrière étanche.", "TYR": "Première réaction de la chaîne chimique qui colore la peau.", "DCT": "Une étape plus tardive de cette même chaîne doit aussi être catalysée.", "MLANA": "Le pigment est produit dans des organites spécialisés : leur protéine caractéristique doit être présente.", "HBB": "La cellule doit se remplir d'une protéine capable de fixer le dioxygène.", "ALAS2": "Sans groupe chimique contenant du fer, l'hémoglobine ne peut pas fixer l'oxygène : il faut lancer sa fabrication.", "SPTA1": "Un réseau doit consolider la face interne de la membrane.", "CA1": "Le CO₂ produit par les tissus doit être converti en une forme dissoute dans le sang.", "INS": "Un signal doit être envoyé aux cellules du foie, du muscle et du tissu adipeux pour qu'elles absorbent le sucre.", "GCK": "La cellule doit mesurer la quantité de sucre dans le sang.", "PCSK1": "La molécule est fabriquée trop longue : elle doit être coupée pour devenir active.", "IAPP": "Une deuxième hormone est stockée dans les mêmes vésicules que la première.", "MYH2": "La fibre doit produire de la force en faisant glisser des filaments les uns sur les autres.", "TNNT3": "Un interrupteur doit relier l'arrivée des ions Ca²⁺ au démarrage de la contraction.", "ATP2A1": "Une fois l'effort terminé, il faut éliminer le signal de contraction.", "DMD": "La membrane de la fibre ne doit pas se déchirer pendant les contractions répétées.", "SYT1": "La libération des neurotransmetteurs doit être déclenchée par l'entrée d'ions Ca²⁺ dans la terminaison.", "NEFL": "Le très long prolongement de la cellule doit rester solide et calibré.", "SYN1": "Des réserves de messagers chimiques doivent rester prêtes près de la synapse.", "MBP": "Les couches de membrane enroulées autour de l'axone doivent rester collées entre elles.", "PLP1": "La gaine doit contenir une protéine très abondante qui stabilise sa structure.", "MOG": "Une protéine doit être exposée à la surface externe de la gaine."}, "decoys": {"kerat": ["TYR", "GFAP", "CRYAA", "ACTC1", "MLANA", "DCT", "ALB", "LCT", "PGA3", "RHO"], "melan": ["KRT14", "KRT10", "FLG", "CRYAA", "RHO", "LCT", "GFAP", "PGA3", "ALB"], "ery": ["ALB", "DMD", "PGA3", "LCT", "CRYAA", "GFAP", "RHO", "MYH6"], "beta": ["ALB", "PGA3", "LCT", "GFAP", "MYH6", "CRYAA", "RHO", "ACTC1", "KRT14", "HBB"], "musc": ["MYH6", "ACTC1", "NEFL", "SYT1", "ALB", "LCT", "CRYAA", "KRT14", "GFAP", "HBB"], "neur": ["MBP", "PLP1", "MOG", "GFAP", "RHO", "MYH6", "ALB", "ATP2A1", "SPTA1"], "oligo": ["SYT1", "NEFL", "SYN1", "GFAP", "RHO", "ALB", "MYH6", "KRT14", "CRYAA", "LCT"]}, "hkslots": [["POLR2A", "Recopier l'information d'un gène sur une molécule mobile"], ["RPL13A", "Assembler les acides aminés dans l'ordre indiqué par un ARN messager"], ["GAPDH", "Première voie de dégradation du sucre, sans besoin d'oxygène"], ["ATP5F1A", "Recharger la cellule en ATP, sa monnaie d'énergie"], ["ACTB", "Charpente interne de la cellule (cytosquelette)"], ["ATP1A1", "Maintenir des concentrations différentes en sodium et en potassium de part et d'autre de la membrane"], ["PSMB5", "Débarrasser la cellule des protéines inutilisables"], ["XRCC1", "Garder un génome intact malgré les dommages"]], "briefs": {"kerat": ["PEAU", "Le tissu externe de l'organisme doit former une barrière solide et se renouveler."], "melan": ["PIGMENT", "La peau a besoin d'un pigment brun contre les UV. Programme la cellule qui le fabrique."], "ery": ["SANG", "Le sang doit transporter l'oxygène. Programme le précurseur du globule rouge, qui a encore son noyau."], "beta": ["PANCRÉAS", "L'organisme doit régler le sucre du sang. Programme la cellule qui le détecte et fabrique l'hormone."], "musc": ["MUSCLE", "Il faut faire bouger le squelette. Programme la fibre musculaire squelettique rapide."], "neur": ["NERFS", "Il faut transmettre des messages. Programme le neurone."], "oligo": ["MYÉLINE", "BONUS : les axones doivent être isolés. Programme la cellule qui fabrique la gaine de myéline du cerveau."]}};
+
+var SILH="M88 92 C88 102 76 106 66 110 C52 114 44 126 42 144 C40 160 36 190 33 205 C30 218 26 228 24 238 C22 246 28 254 34 248 C38 244 40 234 44 222 C50 206 55 190 57 172 C58 190 62 204 64 216 C64 240 66 262 68 286 C68 300 66 312 66 320 C58 324 54 332 62 336 L92 336 C92 324 94 304 96 284 C97 276 99 270 100 266 C101 270 103 276 104 284 C106 304 108 324 108 336 L138 336 C146 332 142 324 134 320 C134 312 132 300 132 286 C134 262 136 240 136 216 C138 204 142 190 143 172 C145 190 150 206 156 222 C160 234 162 244 166 248 C172 254 178 246 176 238 C174 228 170 218 167 205 C164 190 160 160 158 144 C156 126 148 114 134 110 C124 106 112 102 112 92 Z";
+function organismSvg(done,all){
+  var on=function(k){return all||done[k];};
+  var sk=on('kerat'),pg=on('melan'),bl=on('ery'),pa=on('beta'),mu=on('musc'),ne=on('neur');
+  var dim='fill="none" stroke="#3b3b66" stroke-width="1.4" stroke-dasharray="3 3"';
+  function tw(s){return s+'<g transform="translate(200 0) scale(-1 1)">'+s+'</g>';}
+  var o='<svg viewBox="0 0 200 345" role="img" aria-label="ORGANISME-0" class="org"><defs><filter id="gw" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="gm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a5a"/><stop offset="1" stop-color="#b3182f"/></linearGradient></defs>';
+  // peau
+  o+='<path d="'+SILH+'" '+(sk?'fill="#16162f" stroke="#ff9a7a" stroke-width="3" filter="url(#gw)"':'fill="#101022" stroke="#3b3b66" stroke-width="1.6" stroke-dasharray="4 3"')+' stroke-linejoin="round"/>';
+  // squelette (toile de fond)
+  o+='<g fill="none" stroke="#7a5af0" stroke-width="2" opacity=".4" stroke-linecap="round"><path d="M92 118C80 124 78 140 88 154M92 128C84 134 84 146 92 158M108 118C120 124 122 140 112 154M108 128C116 134 116 146 108 158M76 214C80 232 92 238 100 232C108 238 120 232 124 214"/></g>';
+  // muscles
+  var mus=tw('<path d="M72 118C86 112 98 118 98 134C90 140 76 138 70 130Z"/><path d="M58 124C48 134 44 160 46 190C52 198 58 190 60 170C62 150 62 134 58 124Z"/><path d="M44 196C40 214 38 226 36 238C42 238 46 226 50 210Z"/><path d="M70 234C68 262 70 286 80 292C90 286 96 262 98 234Z"/><path d="M70 298C68 310 70 322 77 324C85 322 89 310 88 298Z"/>');
+  o+=mu?'<g fill="url(#gm)" stroke="#ffb0a0" stroke-width="1.4" filter="url(#gw)">'+mus+'</g><g stroke="#7a1020" stroke-width="1" opacity=".7" fill="none"><path d="M80 120C84 126 86 132 86 138M52 134C52 150 54 170 54 186M80 240C80 260 82 276 82 288M120 120C116 126 114 132 114 138M148 134C148 150 146 170 146 186M120 240C120 260 118 276 118 288"/></g>':'<g '+dim+'>'+mus+'</g>';
+  // pancréas
+  var pan='<path d="M80 184C90 176 108 178 124 186C129 190 122 195 114 193C104 191 92 193 82 192C75 192 75 187 80 184Z"/>';
+  o+=pa?'<g fill="#ffe600" stroke="#fff6a0" stroke-width="1.4" filter="url(#gw)">'+pan+'</g><g fill="#c9a800"><circle cx="92" cy="186" r="1.2"/><circle cx="100" cy="187" r="1.2"/><circle cx="108" cy="188" r="1.2"/></g>':'<g '+dim+'>'+pan+'</g>';
+  // sang : coeur et vaisseaux
+  var art='<path d="M112 136C114 120 104 112 94 108M112 138C132 128 146 132 152 152L158 204M116 164C118 200 118 250 118 312"/>';
+  var vei='<path d="M104 136C100 120 100 112 106 106M104 140C80 128 56 132 50 152L42 204M106 164C102 200 98 250 94 312"/>';
+  var heart='<path d="M112 162C97 151 95 138 104 134C108 132 112 134 112 138C112 134 116 132 120 134C129 138 127 151 112 162Z"/>';
+  o+=bl?'<g fill="none" stroke-width="2.2" stroke-linecap="round"><g stroke="#ff4d5e" filter="url(#gw)">'+art+'</g><g stroke="#3a7bff" filter="url(#gw)">'+vei+'</g></g><g fill="#ff3b57" stroke="#ffb0ba" stroke-width="1.4" filter="url(#gw)">'+heart+'</g>':'<g '+dim+'>'+art+vei+heart+'</g>';
+  // nerfs : colonne, branches
+  var nrv='<path d="M100 92L100 216"/>'+tw('<path d="M100 112C82 112 62 122 50 152L40 200M100 216C92 232 84 252 78 300"/>');
+  o+=ne?'<g fill="none" stroke="#19f0ff" stroke-width="2" stroke-linecap="round" filter="url(#gw)">'+nrv+'</g><g stroke="#19f0ff" stroke-width="1.2" opacity=".8">'+[100,112,124,136,148,160,172,184,196,208].map(function(y){return '<path d="M96 '+y+'L104 '+y+'"/>';}).join('')+'</g>':'<g '+dim+'>'+nrv+'</g>';
+  // tête
+  o+='<ellipse cx="100" cy="52" rx="33" ry="38" fill="'+(sk?'#1a1a36':'#101022')+'" stroke="'+(sk?'#ff9a7a':'#3b3b66')+'" stroke-width="'+(sk?3:1.6)+'"'+(sk?' filter="url(#gw)"':' stroke-dasharray="4 3"')+'/>';
+  var brain='<path d="M78 42C76 28 94 24 100 30C106 24 124 28 122 42C126 50 116 56 108 52C104 56 96 56 92 52C84 56 74 50 78 42Z"/><path d="M100 30V50M88 36C92 38 92 44 88 46M112 36C108 38 108 44 112 46"/>';
+  o+=ne?'<g fill="#0e5a66" stroke="#19f0ff" stroke-width="1.8" stroke-linejoin="round" filter="url(#gw)">'+brain+'</g>':'<g '+dim+'>'+brain+'</g>';
+  // visage
+  o+='<circle cx="88" cy="64" r="6.5" fill="#fff"/><circle cx="112" cy="64" r="6.5" fill="#fff"/><circle cx="89" cy="65" r="2.6" fill="#10101e"/><circle cx="111" cy="65" r="2.6" fill="#10101e"/><path d="M91 81Q100 85 109 81" fill="none" stroke="#19f0ff" stroke-width="3.2" stroke-linecap="round"/>';
+  // cheveux (pigment)
+  var hair='M65 56C58 34 68 14 90 12C97 5 113 5 120 12C142 14 152 36 136 58C140 42 132 32 122 30C114 38 90 38 80 30C70 34 62 44 65 56Z';
+  o+=pg?'<g filter="url(#gw)"><path d="'+hair+'" fill="#ff6a1a" stroke="#ffb36b" stroke-width="1.6"/><path d="M72 28C78 16 92 18 94 24M106 22C110 12 128 14 130 26M62 44C56 36 58 26 66 22M138 44C144 36 142 26 134 22" fill="none" stroke="#ffb36b" stroke-width="1.6" stroke-linecap="round"/></g><g fill="#ff7a2a"><circle cx="84" cy="74" r="1.4"/><circle cx="90" cy="76" r="1.4"/><circle cx="110" cy="76" r="1.4"/><circle cx="116" cy="74" r="1.4"/><circle cx="48" cy="170" r="1.4"/><circle cx="152" cy="174" r="1.4"/><circle cx="46" cy="200" r="1.4"/><circle cx="154" cy="196" r="1.4"/></g>':'<path d="'+hair+'" fill="#23233f" stroke="#55557a" stroke-width="1.4" stroke-dasharray="4 3"/>';
+  return o+'</svg>';
+}
+(function(){
+'use strict';
+var GENES={},CELLS={};
+DATA.genes.forEach(function(g){GENES[g.id]=g;});
+DATA.cells.forEach(function(c){CELLS[c.key]=c;});
+var ORDER=['kerat','melan','ery','beta','musc','neur'],BONUS='oligo';
+var ART={kerat:'d\'un kératinocyte',melan:'d\'un mélanocyte',ery:'d\'un érythroblaste',beta:'d\'une cellule β du pancréas',musc:'d\'une fibre musculaire squelettique',neur:'d\'un neurone',oligo:'d\'un oligodendrocyte'};
+var GORDER=(function(){var a=DATA.genes.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;})();
+var HK=DATA.genes.filter(function(g){return g.group==='hk';}).map(function(g){return g.id;});
+var ICON_ON=`<svg viewBox="0 0 120 60" class="chrom" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 34.5 L2 25.5 M6 39.0 L6 21.0 M10 34.5 L10 25.5 M14 25.5 L14 34.5 M18 21.0 L18 39.0 M22 25.5 L22 34.5 M26 34.5 L26 25.5 M30 39.0 L30 21.0 M34 34.5 L34 25.5 M38 25.5 L38 34.5 M42 21.0 L42 39.0 M46 25.5 L46 34.5 M50 34.5 L50 25.5 M54 39.0 L54 21.0 M58 34.5 L58 25.5 M62 25.5 L62 34.5 M66 21.0 L66 39.0 M70 25.5 L70 34.5 M74 34.5 L74 25.5 M78 39.0 L78 21.0 M82 34.5 L82 25.5 M86 25.5 L86 34.5 M90 21.0 L90 39.0 M94 25.5 L94 34.5 M98 34.5 L98 25.5 M102 39.0 L102 21.0 M106 34.5 L106 25.5 M110 25.5 L110 34.5 M114 21.0 L114 39.0 M118 25.5 L118 34.5" stroke="#19f0ff" stroke-width="1" opacity=".35"/><path d="M0.0 30.0 L1.5 26.6 L3.0 23.6 L4.5 21.7 L6.0 21.0 L7.5 21.7 L9.0 23.6 L10.5 26.6 L12.0 30.0 L13.5 33.4 L15.0 36.4 L16.5 38.3 L18.0 39.0 L19.5 38.3 L21.0 36.4 L22.5 33.4 L24.0 30.0 L25.5 26.6 L27.0 23.6 L28.5 21.7 L30.0 21.0 L31.5 21.7 L33.0 23.6 L34.5 26.6 L36.0 30.0 L37.5 33.4 L39.0 36.4 L40.5 38.3 L42.0 39.0 L43.5 38.3 L45.0 36.4 L46.5 33.4 L48.0 30.0 L49.5 26.6 L51.0 23.6 L52.5 21.7 L54.0 21.0 L55.5 21.7 L57.0 23.6 L58.5 26.6 L60.0 30.0 L61.5 33.4 L63.0 36.4 L64.5 38.3 L66.0 39.0 L67.5 38.3 L69.0 36.4 L70.5 33.4 L72.0 30.0 L73.5 26.6 L75.0 23.6 L76.5 21.7 L78.0 21.0 L79.5 21.7 L81.0 23.6 L82.5 26.6 L84.0 30.0 L85.5 33.4 L87.0 36.4 L88.5 38.3 L90.0 39.0 L91.5 38.3 L93.0 36.4 L94.5 33.4 L96.0 30.0 L97.5 26.6 L99.0 23.6 L100.5 21.7 L102.0 21.0 L103.5 21.7 L105.0 23.6 L106.5 26.6 L108.0 30.0 L109.5 33.4 L111.0 36.4 L112.5 38.3 L114.0 39.0 L115.5 38.3 L117.0 36.4 L118.5 33.4 L120.0 30.0" stroke="#6ff6ff" stroke-width="2.4" opacity=".8"/><path d="M0.0 30.0 L1.5 33.4 L3.0 36.4 L4.5 38.3 L6.0 39.0 L7.5 38.3 L9.0 36.4 L10.5 33.4 L12.0 30.0 L13.5 26.6 L15.0 23.6 L16.5 21.7 L18.0 21.0 L19.5 21.7 L21.0 23.6 L22.5 26.6 L24.0 30.0 L25.5 33.4 L27.0 36.4 L28.5 38.3 L30.0 39.0 L31.5 38.3 L33.0 36.4 L34.5 33.4 L36.0 30.0 L37.5 26.6 L39.0 23.6 L40.5 21.7 L42.0 21.0 L43.5 21.7 L45.0 23.6 L46.5 26.6 L48.0 30.0 L49.5 33.4 L51.0 36.4 L52.5 38.3 L54.0 39.0 L55.5 38.3 L57.0 36.4 L58.5 33.4 L60.0 30.0 L61.5 26.6 L63.0 23.6 L64.5 21.7 L66.0 21.0 L67.5 21.7 L69.0 23.6 L70.5 26.6 L72.0 30.0 L73.5 33.4 L75.0 36.4 L76.5 38.3 L78.0 39.0 L79.5 38.3 L81.0 36.4 L82.5 33.4 L84.0 30.0 L85.5 26.6 L87.0 23.6 L88.5 21.7 L90.0 21.0 L91.5 21.7 L93.0 23.6 L94.5 26.6 L96.0 30.0 L97.5 33.4 L99.0 36.4 L100.5 38.3 L102.0 39.0 L103.5 38.3 L105.0 36.4 L106.5 33.4 L108.0 30.0 L109.5 26.6 L111.0 23.6 L112.5 21.7 L114.0 21.0 L115.5 21.7 L117.0 23.6 L118.5 26.6 L120.0 30.0" stroke="#19f0ff" stroke-width="2.6"/><g fill="#19f0ff" fill-opacity=".28" stroke="none"><ellipse cx="70" cy="30" rx="18" ry="13"/><ellipse cx="62" cy="22" rx="8" ry="6"/><ellipse cx="78" cy="22" rx="7" ry="6"/><ellipse cx="73" cy="39" rx="11" ry="6"/></g><ellipse cx="70" cy="30" rx="18" ry="13" stroke="#9ffaff" stroke-width="1.8" fill="none"/><path d="M56 30Q70 17 84 30M56 30Q70 43 84 30" stroke="#19f0ff" stroke-width="1.8" fill="none"/><path d="M68 37C60 47 44 51 30 53S10 55 3 50" stroke="#9ffaff" stroke-width="2.2"/><path d="M68 37C60 47 44 51 30 53S10 55 3 50" stroke="#9ffaff" stroke-width="4.5" stroke-dasharray="1 3.5" opacity=".5"/><g transform="translate(16 12) rotate(20) scale(0.8)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(106 11) rotate(-15) scale(0.8)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(106 49) rotate(18) scale(0.8)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g></g></svg>`,ICON_OFF=`<svg viewBox="0 0 120 60" class="chrom" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 34.5 L2 25.5 M6 39.0 L6 21.0 M10 34.5 L10 25.5 M14 25.5 L14 34.5 M18 21.0 L18 39.0 M22 25.5 L22 34.5 M26 34.5 L26 25.5 M30 39.0 L30 21.0 M34 34.5 L34 25.5 M38 25.5 L38 34.5 M42 21.0 L42 39.0 M46 25.5 L46 34.5 M50 34.5 L50 25.5 M54 39.0 L54 21.0 M58 34.5 L58 25.5 M62 25.5 L62 34.5 M66 21.0 L66 39.0 M70 25.5 L70 34.5 M74 34.5 L74 25.5 M78 39.0 L78 21.0 M82 34.5 L82 25.5 M86 25.5 L86 34.5 M90 21.0 L90 39.0 M94 25.5 L94 34.5 M98 34.5 L98 25.5 M102 39.0 L102 21.0 M106 34.5 L106 25.5 M110 25.5 L110 34.5 M114 21.0 L114 39.0 M118 25.5 L118 34.5" stroke="#19f0ff" stroke-width="1" opacity=".35"/><path d="M0.0 30.0 L1.5 26.6 L3.0 23.6 L4.5 21.7 L6.0 21.0 L7.5 21.7 L9.0 23.6 L10.5 26.6 L12.0 30.0 L13.5 33.4 L15.0 36.4 L16.5 38.3 L18.0 39.0 L19.5 38.3 L21.0 36.4 L22.5 33.4 L24.0 30.0 L25.5 26.6 L27.0 23.6 L28.5 21.7 L30.0 21.0 L31.5 21.7 L33.0 23.6 L34.5 26.6 L36.0 30.0 L37.5 33.4 L39.0 36.4 L40.5 38.3 L42.0 39.0 L43.5 38.3 L45.0 36.4 L46.5 33.4 L48.0 30.0 L49.5 26.6 L51.0 23.6 L52.5 21.7 L54.0 21.0 L55.5 21.7 L57.0 23.6 L58.5 26.6 L60.0 30.0 L61.5 33.4 L63.0 36.4 L64.5 38.3 L66.0 39.0 L67.5 38.3 L69.0 36.4 L70.5 33.4 L72.0 30.0 L73.5 26.6 L75.0 23.6 L76.5 21.7 L78.0 21.0 L79.5 21.7 L81.0 23.6 L82.5 26.6 L84.0 30.0 L85.5 33.4 L87.0 36.4 L88.5 38.3 L90.0 39.0 L91.5 38.3 L93.0 36.4 L94.5 33.4 L96.0 30.0 L97.5 26.6 L99.0 23.6 L100.5 21.7 L102.0 21.0 L103.5 21.7 L105.0 23.6 L106.5 26.6 L108.0 30.0 L109.5 33.4 L111.0 36.4 L112.5 38.3 L114.0 39.0 L115.5 38.3 L117.0 36.4 L118.5 33.4 L120.0 30.0" stroke="#6ff6ff" stroke-width="2.4" opacity=".8"/><path d="M0.0 30.0 L1.5 33.4 L3.0 36.4 L4.5 38.3 L6.0 39.0 L7.5 38.3 L9.0 36.4 L10.5 33.4 L12.0 30.0 L13.5 26.6 L15.0 23.6 L16.5 21.7 L18.0 21.0 L19.5 21.7 L21.0 23.6 L22.5 26.6 L24.0 30.0 L25.5 33.4 L27.0 36.4 L28.5 38.3 L30.0 39.0 L31.5 38.3 L33.0 36.4 L34.5 33.4 L36.0 30.0 L37.5 26.6 L39.0 23.6 L40.5 21.7 L42.0 21.0 L43.5 21.7 L45.0 23.6 L46.5 26.6 L48.0 30.0 L49.5 33.4 L51.0 36.4 L52.5 38.3 L54.0 39.0 L55.5 38.3 L57.0 36.4 L58.5 33.4 L60.0 30.0 L61.5 26.6 L63.0 23.6 L64.5 21.7 L66.0 21.0 L67.5 21.7 L69.0 23.6 L70.5 26.6 L72.0 30.0 L73.5 33.4 L75.0 36.4 L76.5 38.3 L78.0 39.0 L79.5 38.3 L81.0 36.4 L82.5 33.4 L84.0 30.0 L85.5 26.6 L87.0 23.6 L88.5 21.7 L90.0 21.0 L91.5 21.7 L93.0 23.6 L94.5 26.6 L96.0 30.0 L97.5 33.4 L99.0 36.4 L100.5 38.3 L102.0 39.0 L103.5 38.3 L105.0 36.4 L106.5 33.4 L108.0 30.0 L109.5 26.6 L111.0 23.6 L112.5 21.7 L114.0 21.0 L115.5 21.7 L117.0 23.6 L118.5 26.6 L120.0 30.0" stroke="#19f0ff" stroke-width="2.6"/><g transform="translate(30 19) rotate(-18) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(42 17) rotate(12) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(54 19) rotate(-14) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(66 17) rotate(16) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(78 19) rotate(-12) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(90 20) rotate(14) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(36 41) rotate(16) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(48 43) rotate(-12) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(60 41) rotate(14) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(72 43) rotate(-16) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(84 41) rotate(12) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(54 30) rotate(6) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(68 30) rotate(-8) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g><g transform="translate(40 30) rotate(-6) scale(1)"><ellipse rx="8" ry="10.5" fill="#8b2fe0" stroke="#e0b3ff" stroke-width="1.3"/><ellipse rx="4.6" ry="6.4" fill="none" stroke="#c88cff" stroke-width="1" opacity=".7"/><path d="M-8 -3.5Q0 -10 8 -3.5M-8 3.5Q0 10 8 3.5" fill="none" stroke="#19f0ff" stroke-width="1.7"/></g></g></svg>`;
+var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+
+/* ---------- stockage ---------- */
+var KEY='geneswitch.v3';
+function def(){return {intro:false,city:null,cases:{},final:null,mode:'explorer',sound:true,unlockAll:false,expert:{}};}
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')return Object.assign(def(),s);}catch(e){}return def();}
+var S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- utilitaires ---------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function idsOf(k){return DATA.genes.filter(function(g){return g.group===k;}).map(function(g){return g.id;});}
+function nDone(){return ORDER.filter(function(k){return S.cases[k];}).length;}
+function totalScore(){var t=(S.city?S.city.score:0);ORDER.forEach(function(k){if(S.cases[k])t+=S.cases[k].score;});if(S.final)t+=S.final.score;return t;}
+function maxScore(){var m=800;ORDER.forEach(function(k){m+=idsOf(k).length*100;});return m+4*150;}
+function rankOf(){var r=totalScore()/maxScore();return r>=.9?'S':(r>=.75?'A':(r>=.55?'B':'C'));}
+function gradeErr(e){return e===0?'S':(e===1?'A':(e<=3?'B':'C'));}
+
+/* ---------- sons ---------- */
+var AC=null;
+function beep(f,d,type,when,vol){
+  if(!S.sound)return;
+  try{
+    if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return;AC=new A();}
+    if(AC.state==='suspended')AC.resume();
+    var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(when||0);
+    o.type=type||'square';o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(vol||0.05,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+0.02);
+  }catch(e){}
+}
+var sfx={
+  ok:function(){beep(660,.09);beep(990,.14,'square',.09);},
+  bad:function(){beep(160,.22,'sawtooth',0,.06);},
+  tap:function(){beep(440,.04,'square',0,.03);},
+  win:function(){[523,659,784,1047].forEach(function(f,i){beep(f,.16,'square',i*.11);});},
+  boot:function(){[220,330,440,660,880,1320].forEach(function(f,i){beep(f,.2,'triangle',i*.18,.06);});}
+};
+function updSound(){var b=$('#btnSound');if(b)b.textContent=S.sound?'Son : oui':'Son : non';}
+
+/* ---------- machine à écrire ---------- */
+var tw=null;
+function typeInto(el,text){
+  clearInterval(tw);if(!el)return;
+  if(reduce){el.textContent=text;el.classList.remove('typed');return;}
+  var i=0;el.textContent='';el.classList.add('typed');
+  tw=setInterval(function(){i+=2;el.textContent=text.slice(0,i);if(i>=text.length){clearInterval(tw);}},16);
+  el.onclick=function(){clearInterval(tw);el.textContent=text;};
+}
+
+/* ---------- pixel art ---------- */
+function gray(h){var n=parseInt(h.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255,l=Math.round((0.3*r+0.59*g+0.11*b)*0.42+22);return 'rgb('+l+','+l+','+(l+10)+')';}
+function painter(ctx,alive){
+  var col=function(h){return alive?h:gray(h);};
+  return {
+    r:function(x,y,w,h,c){ctx.fillStyle=col(c);ctx.fillRect(x,y,w,h);},
+    p:function(x,y,c){ctx.fillStyle=col(c);ctx.fillRect(x,y,1,1);},
+    c:function(cx,cy,rad,c){ctx.fillStyle=col(c);for(var y=-rad;y<=rad;y++)for(var x=-rad;x<=rad;x++)if(x*x+y*y<=rad*rad+rad*0.6)ctx.fillRect(cx+x,cy+y,1,1);},
+    l:function(x0,y0,x1,y1,c){ctx.fillStyle=col(c);var dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,er=dx-dy,n=0;while(n++<400){ctx.fillRect(x0,y0,2,2);if(x0===x1&&y0===y1)break;var e2=2*er;if(e2>-dy){er-=dy;x0+=sx;}if(e2<dx){er+=dx;y0+=sy;}}}
+  };
+}
+function disc(P,x,y,r,fill,line){P.c(x,y,r+1,line);P.c(x,y,r,fill);}
+var SPR={
+  kerat:function(P){var o='#2a1030';
+    [[6,10],[24,10],[42,10]].forEach(function(a){P.r(a[0]-1,a[1]-1,18,8,o);P.r(a[0],a[1],16,6,'#ffc0d6');P.r(a[0]+1,a[1]+1,12,2,'#ffe6f0');});
+    [[4,20],[22,20],[40,20]].forEach(function(a){P.r(a[0]-1,a[1]-1,20,12,o);P.r(a[0],a[1],18,10,'#ff8fb8');P.r(a[0]+7,a[1]+4,4,3,'#7a1d4a');});
+    [[2,33],[18,33],[34,33],[50,33]].forEach(function(a){P.r(a[0]-1,a[1]-1,16,16,o);P.r(a[0],a[1],14,14,'#ff5c9a');P.r(a[0]+5,a[1]+5,5,5,'#5a0f3a');});
+    P.r(0,52,64,4,'#b03a48');},
+  melan:function(P){var o='#1a0f0a';
+    [[6,8],[58,10],[6,56],[58,54],[32,4]].forEach(function(e){P.l(32,32,e[0],e[1],'#7a4a2a');P.c(e[0],e[1],3,'#5a3018');P.p(e[0],e[1],'#d99a60');});
+    disc(P,32,32,13,'#a8693a',o);P.c(30,29,7,'#c98a54');P.c(34,34,5,'#3a1a10');
+    [[24,38],[40,26],[26,24],[40,40]].forEach(function(a){P.r(a[0],a[1],2,2,'#2a1008');});},
+  ery:function(P){disc(P,32,32,22,'#e23d4f','#2a0a10');P.c(26,24,8,'#f26a78');disc(P,36,34,9,'#4a1b6e','#1d0a2e');
+    [[16,40],[20,18],[46,22],[44,46],[18,30],[30,50]].forEach(function(a){P.r(a[0],a[1],3,3,'#ffd0d6');});},
+  beta:function(P){disc(P,32,32,22,'#2f9bff','#0a1a40');P.c(26,26,8,'#5cb6ff');disc(P,27,30,8,'#1a2f8a','#0a1a40');
+    [[40,22],[46,30],[42,40],[36,46],[48,40],[38,32],[44,26],[32,48]].forEach(function(a){P.r(a[0],a[1],3,3,'#ffe600');});},
+  musc:function(P){var o='#2a0f14';P.r(1,20,62,24,o);P.r(2,21,60,22,'#d9534f');
+    for(var x=5;x<60;x+=6){P.r(x,21,2,22,'#8f2b2b');P.r(x+3,21,1,22,'#f08a85');}
+    [[10,22],[28,22],[46,22]].forEach(function(a){P.r(a[0],a[1],6,4,'#3a0f14');});
+    P.r(1,44,62,2,'#7a1f24');},
+  neur:function(P){P.l(14,26,3,10,'#b36bff');P.l(12,24,8,6,'#b36bff');P.l(12,38,4,54,'#b36bff');P.l(16,40,12,58,'#b36bff');
+    disc(P,20,32,9,'#b36bff','#1d0a2e');disc(P,20,32,4,'#4b1d7a','#1d0a2e');
+    P.r(28,31,28,3,'#b36bff');P.l(56,32,62,22,'#b36bff');P.l(56,32,62,32,'#b36bff');P.l(56,32,62,44,'#b36bff');
+    [[60,20],[61,31],[60,43]].forEach(function(a){P.c(a[0],a[1],2,'#ffe600');});},
+  oligo:function(P){disc(P,12,32,8,'#7ee0c0','#0a2a22');
+    [18,32,46].forEach(function(y){P.l(18,32,28,y,'#7ee0c0');P.r(28,y-1,36,2,'#8a8aaa');
+      for(var x=30;x<60;x+=11){P.r(x,y-4,8,8,'#f5f5d0');P.r(x+1,y-3,6,2,'#fff');}});},
+  city:function(P){disc(P,32,32,28,'#6a4cff','#1a0f40');P.c(32,32,24,'#241a5a');disc(P,32,32,9,'#8a5cff','#1a0f40');
+    [[14,20],[50,18],[12,40],[52,42],[22,52],[42,52],[32,12],[32,54]].forEach(function(a){P.r(a[0]-3,a[1]-3,7,7,'#ffe600');P.r(a[0]-2,a[1]-2,5,2,'#fff6a0');});}
+};
+function drawSprite(cv,key,alive){var ctx=cv.getContext('2d');cv.width=64;cv.height=64;ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,64,64);(SPR[key]||SPR.city)(painter(ctx,alive));}
+function spriteBox(key,alive,label){return '<div class="panel sprite'+(alive?' alive':'')+'"><canvas width="64" height="64" id="spr" data-key="'+key+'" data-alive="'+(alive?1:0)+'"></canvas><div class="lbl">'+esc(label)+'</div></div>';}
+function paintSprites(){$$('canvas[data-key]').forEach(function(c){drawSprite(c,c.dataset.key,c.dataset.alive==='1');});}
+
+/* ---------- noyau (40 gènes) ---------- */
+function bulbHtml(g,cls,interactive){
+  var on=(cls!=='');var tag=interactive?'button type="button" data-bulb="'+g.id+'"':'div';var end=interactive?'button':'div';
+  return '<'+tag+' class="bulb '+cls+'" title="'+esc(g.name)+'">'+(on?ICON_ON:ICON_OFF)+'<i>'+esc(g.id)+'</i></'+end+'>';
+}
+function nucleusHtml(stateFn,interactive,title){
+  return '<div class="genome"><div class="gtag">'+(title||'LE GÉNOME D\'ORGANISME-0 : 40 GÈNES')+'</div><div class="nuc">'+GORDER.map(function(g){return bulbHtml(g,stateFn(g),interactive);}).join('')+'</div></div>';
+}
+
+/* ---------- navigation ---------- */
+var app=$('#app');
+var cur={name:'title'};
+function go(name,arg){
+  clearInterval(tw);cur={name:name,arg:arg};
+  var fn=SCREENS[name]||SCREENS.title;app.innerHTML='';fn(arg);
+  paintSprites();window.scrollTo(0,0);
+  var hb=$('#btnHub');if(hb)hb.style.display=S.intro?'':'none';
+}
+function modeClass(){return 'explorer';}
+
+/* ---------- plateau (cases et Cell city) ---------- */
+var B=null;
+function startBoard(cfg){
+  var hand=cfg.hand.map(function(id){return id;});
+  B={cfg:cfg,filled:{},sel:null,selSlot:null,err:0,pts:0,slotErr:cfg.slots.map(function(){return 0;}),hand:shuffle(hand),open:{},combo:0};
+  app.className=modeClass();
+  app.innerHTML=
+   '<section class="board">'+
+   '<div class="b-top">'+spriteBox(cfg.sprite,false,cfg.spriteLabel)+
+   '<div class="panel"><div class="tag">'+esc(cfg.tag)+'</div><div class="speaker">MENDEL&gt;</div><p id="mtxt"></p><div class="stats" id="stats"></div></div></div>'+
+   '<div class="b-main"><div class="panel"><h3>'+esc(cfg.slotTitle)+'</h3><div class="slots" id="slots"></div><div class="fb" id="fb" aria-live="polite"><b>MENDEL&gt;</b>'+esc(cfg.help)+'</div></div>'+
+   '<div class="panel"><h3>PROTÉINES DISPONIBLES</h3><div class="hand" id="hand"></div></div></div></section>';
+  typeInto($('#mtxt'),cfg.brief);renderSlots();renderHand();renderStats();
+}
+function renderStats(){$('#stats').innerHTML='<span class="chip">ERREURS '+B.err+'</span><span class="chip">INDICES '+Object.keys(B.filled).length+'/'+B.cfg.slots.length+'</span><span class="chip">SCORE '+B.pts+'</span>';}
+function renderSlots(){
+  $('#slots').innerHTML=B.cfg.slots.map(function(s,i){
+    var f=B.filled[i],g=GENES[s.gene];
+    return '<button type="button" class="slot'+(f?' ok':'')+(B.selSlot===i?' sel':'')+'" data-slot="'+i+'"><span class="n">'+('0'+(i+1))+'</span><span class="clue">'+esc(s.clue)+'</span>'+(f?'<span class="val">'+esc(g.id)+'</span>':'')+'</button>';
+  }).join('');
+}
+function renderHand(){
+  $('#hand').innerHTML=B.hand.map(function(id){
+    var g=GENES[id],used=B.cfg.slots.some(function(s,i){return B.filled[i]&&s.gene===id;});
+    return '<div class="card'+(used?' used':'')+(B.sel===id?' sel':'')+(B.open[id]?' open':'')+'" role="button" tabindex="0" data-card="'+id+'"><span class="sym">'+esc(id)+'</span><span class="pn">'+esc(g.name)+'</span><span class="fn">'+esc(g.fn)+'</span><button type="button" class="info" data-info="'+id+'" aria-label="Voir la description">i</button></div>';
+  }).join('');
+}
+function say(kind,title,text){var f=$('#fb');f.className='fb '+kind;f.innerHTML='<b>'+esc(title)+'</b>'+esc(text);}
+function tryAttempt(){
+  if(B.sel==null||B.selSlot==null)return;
+  var gene=B.sel,i=B.selSlot,slot=B.cfg.slots[i];B.sel=null;B.selSlot=null;
+  if(gene===slot.gene){
+    var pts=Math.max(25,100-25*B.slotErr[i]);B.pts+=pts;B.filled[i]=true;sfx.ok();
+    say('good','CONNEXION OK','+'+pts+' points. '+GENES[gene].name+' : '+GENES[gene].fn);
+  }else{
+    B.err++;B.slotErr[i]++;sfx.bad();
+    var g=GENES[gene],mine=B.cfg.slots.some(function(s){return s.gene===gene;});
+    var msg=mine?g.id+' sert bien ici, mais ne répond pas à cet indice. Relis l\'indice et la description.':
+      'Pas ici. '+g.id+' : '+g.fn+' On la trouve surtout dans : '+g.where.charAt(0).toLowerCase()+g.where.slice(1)+'.';
+    say('bad','ERREUR DE CONNEXION',msg);
+    app.classList.remove('shake');void app.offsetWidth;if(!reduce)app.classList.add('shake');
+  }
+  renderSlots();renderHand();renderStats();
+  if(Object.keys(B.filled).length===B.cfg.slots.length){setTimeout(function(){sfx.win();B.cfg.onDone(B);},700);}
+}
+
+/* ---------- écrans ---------- */
+var SCREENS={};
+SCREENS.title=function(){
+  app.className='';
+  app.innerHTML='<section class="title"><div class="tag">PROJET ORGANISME-0</div><h1 class="glitch">GENESWITCH</h1>'+
+   '<p class="sub">Même génome, cellules différentes.<br>Programme un organisme en allumant les bons gènes.</p>'+
+   '<div class="panel" style="max-width:640px;margin:0 auto;text-align:left"><div class="speaker">MENDEL&gt;</div><p id="mtxt"></p></div>'+
+   '<div class="cta"><button type="button" class="btn pri" data-go="'+(S.intro?'hub':'intro')+'">'+(S.intro?'Continuer':'Démarrer')+'</button></div></section>';
+  typeInto($('#mtxt'),'Bienvenue, généticien. Dans ce laboratoire, tu dois programmer ORGANISME-0 pour sauver le monde. Comme tous les organismes, celui-ci a un génome, avec des gènes présents dans toutes ses cellules. Mais comme on a besoin de cellules spécialisées, seuls les gènes utiles doivent être allumés. À toi de choisir lesquels sont allumés dans chaque tissu.');
+};
+
+SCREENS.intro=function(){
+  app.className='';
+  var opened={};cur.opened=opened;
+  app.innerHTML='<section><div class="panel"><div class="tag">ÉTAPE 1 // LE GÉNOME</div><div class="speaker">MENDEL&gt;</div><p id="mtxt"></p>'+
+   '<div id="nucbox"></div>'+
+   '<div class="legendrow"><span><b style="background:#a855f7"></b>OFF : ADN condensé (histones serrées), pas de transcription</span><span><b style="background:var(--cyan)"></b>ON : ADN décondensé, transcription en ARN messager</span></div>'+
+   '<div class="row2"><button type="button" class="btn pri" id="introNext" data-go="city" disabled>Suite</button></div></div></section>';
+  renderIntroNuc();
+  typeInto($('#mtxt'),'Voici une partie du génome d\'ORGANISME-0 : 40 gènes, présents dans toutes ses cellules. Chaque case est un gène. Touche au moins 3 gènes pour voir ce qui se passe quand on les allume.');
+};
+function renderIntroNuc(){
+  var o=cur.opened||{};$('#nucbox').innerHTML=nucleusHtml(function(g){return o[g.id]?'on':'';},true);
+  var n=Object.keys(o).length;
+  if(n>=3){var b=$('#introNext');if(b)b.disabled=false;}
+}
+function introBulb(id){
+  var o=cur.opened;if(o[id])delete o[id];else o[id]=1;sfx.tap();renderIntroNuc();
+  if(Object.keys(o).length===3&&!cur.said){cur.said=1;typeInto($('#mtxt'),'Gène OFF : l\'ADN est enroulé autour de nombreuses histones (en violet) et condensé. Le gène est inaccessible : il n\'est pas transcrit. Gène ON : l\'ADN est décondensé et l\'ARN polymérase peut le lire. Elle fabrique un ARN messager (transcription), qui servira à fabriquer la protéine. Toutes les cellules ont les 40 gènes, mais elles n\'allument pas les mêmes.');}
+}
+
+SCREENS.city=function(){
+  var slots=DATA.hkslots.map(function(a){return {gene:a[0],clue:a[1]};});
+  startBoard({tag:'ÉTAPE 2 // FONCTIONS DE SURVIE',sprite:'city',spriteLabel:'FONCTIONS DE SURVIE',slotTitle:'FONCTIONS DE SURVIE',
+    brief:'Avant de se spécialiser, une cellule doit survivre. Toutes les cellules assurent les mêmes fonctions de base. Place chaque protéine sur la fonction qu\'elle réalise : ce sont les gènes d\'entretien.',
+    help:'Touche une protéine puis une fonction.',slots:slots,hand:HK,
+    onDone:function(b){S.city={score:b.pts,err:b.err};S.intro=true;save();
+      go('reveal',{kind:'city',pts:b.pts,err:b.err});}});
+};
+
+SCREENS.hub=function(){
+  app.className='';
+  var done={};ORDER.forEach(function(k){if(S.cases[k])done[k]=1;});
+  var cityDone=!!S.city,all6=nDone()===ORDER.length,ua=S.unlockAll;
+  function state(k,i){if(S.cases[k])return 'done';if(ua||(cityDone&&(i===0||S.cases[ORDER[i-1]])))return 'open';return 'lock';}
+  var rows='<button type="button" class="mission '+(cityDone?'done':'open')+'" data-go="city"><span class="no">00</span><span class="nm">SURVIE // Fonctions de survie de la cellule<small>Les gènes d\'entretien, allumés dans toutes les cellules</small></span><span class="st">'+(cityDone?'OK':'>>')+'</span></button>';
+  ORDER.forEach(function(k,i){var st=state(k,i),b=DATA.briefs[k];
+    rows+='<button type="button" class="mission '+st+'" '+(st==='lock'?'disabled':'data-case="'+k+'"')+'><span class="no">0'+(i+1)+'</span><span class="nm">'+esc(b[0])+' // '+esc(CELLS[k].name)+'<small>'+esc(b[1])+'</small></span><span class="st">'+(st==='done'?esc(S.cases[k].grade):(st==='lock'?'VERR.':'>>'))+'</span></button>';});
+  var fOpen=ua||all6;
+  rows+='<button type="button" class="mission '+(S.final?'done':(fOpen?'open':'lock'))+'" '+(fOpen?'data-go="final"':'disabled')+'><span class="no">FIN</span><span class="nm">DÉMARRAGE // QUI EST-CE ?<small>4 cellules mystères, puis réveil de l\'organisme</small></span><span class="st">'+(S.final?'OK':(fOpen?'>>':'VERR.'))+'</span></button>';
+  var bOpen=ua||all6;
+  rows+='<button type="button" class="mission '+(S.cases[BONUS]?'done':(bOpen?'open':'lock'))+'" '+(bOpen?'data-case="'+BONUS+'"':'disabled')+'><span class="no">BON</span><span class="nm">BONUS // '+esc(CELLS[BONUS].name)+'<small>La gaine de myéline</small></span><span class="st">'+(S.cases[BONUS]?esc(S.cases[BONUS].grade):(bOpen?'>>':'VERR.'))+'</span></button>';
+  var xOpen=ua||!!S.final;
+  rows+='<button type="button" class="mission '+(xOpen?'open':'lock')+'" '+(xOpen?'data-go="expertpick"':'disabled')+'><span class="no">EXP</span><span class="nm">MODE EXPERT<small>Les 40 gènes, sans indices</small></span><span class="st">'+(xOpen?'>>':'VERR.')+'</span></button>';
+  app.innerHTML='<section class="hub"><div class="panel creature"><div class="tag">ORGANISME-0</div><div id="org" class="orgsvg"></div><div class="meter">TISSUS '+nDone()+'/6<br>SCORE '+totalScore()+'</div></div><div class="panel missions"><h2 style="font-size:13px;color:var(--cyan);margin-bottom:4px">MISSIONS</h2>'+rows+'</div></section>';
+  $('#org').innerHTML=organismSvg(done,false);
+};
+
+SCREENS.case=function(k){
+  var c=CELLS[k],b=DATA.briefs[k],ids=idsOf(k);
+  var slots=shuffle(ids).map(function(id){return {gene:id,clue:DATA.clues[id]};});
+  var nDec=6;
+  var hand=ids.concat(DATA.decoys[k].slice(0,nDec));
+  startBoard({tag:'TISSU // '+b[0],sprite:k,spriteLabel:c.name.toUpperCase(),slotTitle:'INDICES DE PROGRAMMATION',
+    brief:b[1]+' Place chaque protéine sur l\'indice qu\'elle satisfait. Les 8 gènes d\'entretien sont déjà allumés.',
+    help:'Touche une protéine puis un indice. Si tu te trompes, tu sauras pourquoi.',slots:slots,hand:hand,
+    onDone:function(bd){var g=gradeErr(bd.err);var prev=S.cases[k];
+      if(!prev||bd.pts>prev.score)S.cases[k]={score:bd.pts,err:bd.err,grade:g};save();
+      go('reveal',{kind:'case',key:k,pts:bd.pts,err:bd.err,grade:g});}});
+};
+
+SCREENS.reveal=function(a){
+  app.className='';
+  var html;
+  if(a.kind==='city'){
+    html='<section class="reveal"><div class="panel"><div class="tag">FONCTIONS DE SURVIE // ASSURÉES</div><h2>LA CELLULE PEUT SURVIVRE</h2>'+
+     '<div class="b-top" style="margin-top:12px">'+spriteBox('city',true,'FONCTIONS DE SURVIE')+'<div><p>Ces 8 gènes d\'entretien fabriquent les protéines dont <b>toutes</b> les cellules ont besoin : lire les gènes, fabriquer et recycler les protéines, produire de l\'énergie, garder la forme, équilibrer la membrane, réparer l\'ADN. Ils sont ON partout.</p>'+
+     '<div class="callout">Remarque : « gène d\'entretien » veut dire gène exprimé dans presque toutes les cellules. Son niveau d\'expression varie d\'un tissu à l\'autre.</div></div></div>'+
+     '<p><b>Voici le génome de n\'importe quelle cellule d\'ORGANISME-0 : ses 8 gènes d\'entretien sont ON.</b> Les 32 autres restent OFF tant qu\'une cellule ne se spécialise pas.</p>'+nucleusHtml(function(g){return g.group==='hk'?'hk':'';},false,'LE GÉNOME D\'UNE CELLULE : 8 GÈNES D\'ENTRETIEN ON')+
+     '<div class="legendrow"><span><b style="background:var(--yellow)"></b>gènes d\'entretien ON</span><span><b style="background:#8a8ab5"></b>OFF</span></div>'+
+     '<p class="big" style="margin-top:12px">+'+a.pts+' POINTS</p><div class="row2"><button class="btn pri" type="button" data-go="hub">Missions</button></div></div></section>';
+  }else{
+    var k=a.key,c=CELLS[k],ids=idsOf(k),n=HK.length+ids.length;
+    html='<section class="reveal"><div class="panel"><div class="tag">TISSU // '+esc(DATA.briefs[k][0])+' : EN LIGNE</div><h2>'+esc(c.name.toUpperCase())+' PROGRAMMÉE</h2>'+
+     '<div class="b-top" style="margin-top:12px">'+spriteBox(k,true,c.name.toUpperCase())+'<div><p>'+esc(c.won)+'</p><div class="callout"><b>Le savais-tu ?</b> '+esc(c.dyk)+'</div></div></div>'+
+     '<p><b>Voici à quoi ressemble le génome '+ART[k]+' en activité : '+n+' gènes ON sur 40.</b> Le génome est le même dans toutes les cellules d\'ORGANISME-0 : seuls les gènes allumés changent.</p>'+
+     nucleusHtml(function(g){return g.group==='hk'?'hk':(g.group===k?'id':'');},false,'LE GÉNOME '+ART[k].toUpperCase()+' : '+n+' GÈNES ON')+
+     '<div class="legendrow"><span><b style="background:var(--yellow)"></b>entretien ON</span><span><b style="background:var(--green)"></b>identité ON</span><span><b style="background:#8a8ab5"></b>OFF</span></div>'+
+     '<div class="row2" style="align-items:center"><span class="grade">'+esc(a.grade)+'</span><span class="big">+'+a.pts+' POINTS</span><span class="dim">'+a.err+' erreur'+(a.err>1?'s':'')+'</span></div>'+
+     '<div class="row2"><button class="btn pri" type="button" data-go="hub">Missions</button>'+(ORDER.indexOf(k)>=0&&ORDER.indexOf(k)<ORDER.length-1?'<button class="btn" type="button" data-case="'+ORDER[ORDER.indexOf(k)+1]+'">Tissu suivant</button>':'')+'</div></div></section>';
+  }
+  app.innerHTML=html;sfx.win();
+};
+
+/* ---------- final : qui est-ce ? ---------- */
+var F=null;
+SCREENS.final=function(){
+  app.className='';
+  F={rounds:shuffle(ORDER).slice(0,4),i:0,pts:0};finalRound();
+};
+function finalRound(){
+  var k=F.rounds[F.i],ids=idsOf(k);
+  var opts=shuffle([k].concat(shuffle(ORDER.filter(function(x){return x!==k;})).slice(0,3)));
+  app.innerHTML='<section><div class="panel"><div class="tag">DÉMARRAGE // CELLULE '+(F.i+1)+'/4</div><div class="speaker">MENDEL&gt;</div><p>Une cellule d\'ORGANISME-0 a ses 8 gènes d\'entretien allumés, plus ces gènes d\'identité. Quelle est cette cellule ?</p>'+
+    '<div class="hand" style="margin:12px 0">'+ids.map(function(id){var g=GENES[id];return '<div class="card" style="cursor:default"><span class="sym">'+esc(id)+'</span><span class="pn" style="padding-right:0">'+esc(g.name)+'</span><span class="fn" style="display:block">'+esc(g.fn.replace(/\b(des|du) (kératinocytes|mélanocytes|neurones|oligodendrocytes)[^.;,]*/i,'de la cellule'))+'</span></div>';}).join('')+'</div>'+
+    '<div class="row2" id="opts">'+opts.map(function(o){return '<button type="button" class="btn" data-fopt="'+o+'">'+esc(CELLS[o].name)+'</button>';}).join('')+'</div><div class="fb" id="fb"></div></div></section>';
+}
+function finalAnswer(o){
+  var k=F.rounds[F.i],ok=o===k;
+  $$('#opts .btn').forEach(function(b){b.disabled=true;if(b.dataset.fopt===k)b.classList.add('on');});
+  if(ok){F.pts+=150;sfx.ok();}else{sfx.bad();if(!reduce){app.classList.remove('shake');void app.offsetWidth;app.classList.add('shake');}}
+  var f=$('#fb');f.className='fb '+(ok?'good':'bad');
+  f.innerHTML='<b>'+(ok?'IDENTIFIÉE : +150':'RATÉ : C\'ÉTAIT '+esc(CELLS[k].name.toUpperCase()))+'</b>'+esc(CELLS[k].won)+'<div class="row2"><button class="btn pri" type="button" data-fnext="1">'+(F.i===3?'Réveiller l\'organisme':'Suivante')+'</button></div>';
+}
+function finalNext(){
+  if(F.i<3){F.i++;finalRound();return;}
+  S.final={score:F.pts};save();go('boot');
+}
+
+SCREENS.boot=function(){
+  app.className='';
+  app.innerHTML='<section><div class="panel" style="text-align:center"><div class="tag">SÉQUENCE DE DÉMARRAGE</div><div id="org" class="orgsvg"></div><p id="mtxt" style="text-align:left"></p><div id="bootres"></div></div></section>';
+  var cv=$('#org');cv.innerHTML=organismSvg({},false);
+  var order=['kerat','melan','ery','beta','musc','neur'],done={},i=0;sfx.boot();
+  function step(){
+    if(i<order.length){done[order[i]]=1;cv.innerHTML=organismSvg(done,false);i++;setTimeout(step,reduce?0:420);return;}
+    cv.innerHTML=organismSvg(done,true);
+    var rk=rankOf();
+    typeInto($('#mtxt'),'ORGANISME-0 est vivant. Les 6 tissus fonctionnent. Tous partagent le même génome de 40 gènes : seule la liste des gènes allumés les distingue.');
+    $('#bootres').innerHTML='<p class="big">SCORE '+totalScore()+' / '+maxScore()+'</p><p class="grade">RANG '+rk+'</p><div class="row2" style="justify-content:center"><button class="btn pri" type="button" data-go="hub">Missions</button><button class="btn" type="button" data-go="expertpick">Mode expert</button></div>';
+  }
+  step();
+};
+
+/* ---------- mode expert ---------- */
+var X=null;
+SCREENS.expertpick=function(){
+  app.className='';
+  var rows=ORDER.concat([BONUS]).map(function(k){var e=S.expert[k];return '<button type="button" class="mission open" data-xcell="'+k+'"><span class="no">'+(e?'OK':'>>')+'</span><span class="nm">'+esc(CELLS[k].name)+'<small>'+esc(CELLS[k].mission)+'</small></span><span class="st">'+(e?e.tests+' T':'')+'</span></button>';}).join('');
+  app.innerHTML='<section><div class="panel missions"><div class="tag">MODE EXPERT</div><p>Tu as les 40 gènes sous les yeux. Allume ceux de ta cellule (entretien et identité) et teste. Le test te dit ce qui ne va pas, jamais quel gène est en cause.</p>'+rows+'</div></section>';
+};
+SCREENS.expert=function(k){
+  app.className='';X={k:k,on:{},tests:0,q:''};
+  app.innerHTML='<section><div class="panel"><div class="tag">EXPERT // '+esc(CELLS[k].name.toUpperCase())+'</div><p>'+esc(CELLS[k].mission)+' '+esc(CELLS[k].fiche)+'</p><div class="stats"><span class="chip" id="xon"></span><span class="chip" id="xt"></span></div><div class="fb" id="xfb"></div><input type="search" id="xq" placeholder="Chercher un gène ou une fonction" aria-label="Chercher"><div class="exgrid" id="xgrid"></div></div></section>'+
+   '<div class="bar"><button class="btn small" type="button" data-xclear="1">Tout éteindre</button><button class="btn pri small" type="button" data-xtest="1">Tester la cellule</button></div>';
+  renderX();
+};
+function renderX(){
+  var q=X.q.toLowerCase();
+  $('#xgrid').innerHTML=DATA.genes.slice().sort(function(a,b){return a.id<b.id?-1:1;}).filter(function(g){return !q||(g.id+' '+g.name+' '+g.fn).toLowerCase().indexOf(q)>=0;}).map(function(g){
+    var on=!!X.on[g.id];return '<button type="button" class="sw" role="switch" aria-checked="'+on+'" data-xg="'+g.id+'">'+(on?ICON_ON:ICON_OFF)+'<span class="t"><b>'+esc(g.id)+' '+(on?'ON':'OFF')+'</b>'+esc(g.name)+'</span></button>';}).join('');
+  $('#xon').textContent='GÈNES ON '+Object.keys(X.on).filter(function(i){return X.on[i];}).length+'/40';$('#xt').textContent='TESTS '+X.tests;
+}
+function xTest(){
+  X.tests++;var k=X.k,on=X.on;
+  var hk=HK.filter(function(i){return !on[i];}).length,id=idsOf(k).filter(function(i){return !on[i];}).length,ex=DATA.genes.filter(function(g){return g.group!=='hk'&&g.group!==k&&on[g.id];}).length;
+  var f=$('#xfb');
+  if(!hk&&!id&&!ex){
+    var best=S.expert[k];if(!best||X.tests<best.tests)S.expert[k]={tests:X.tests};save();sfx.win();
+    f.className='fb good';f.innerHTML='<b>CELLULE PROGRAMMÉE EN '+X.tests+' TEST'+(X.tests>1?'S':'')+'</b>'+esc(CELLS[k].won)+'<div class="row2"><button class="btn pri" type="button" data-go="expertpick">Autre cellule</button></div>';
+  }else{
+    var m=[];if(hk)m.push('Cellule non viable : il manque des gènes d\'entretien.');if(id)m.push('Différenciation incomplète : il manque des gènes d\'identité.');if(ex)m.push('Identité brouillée : des gènes d\'autres cellules sont allumés.');
+    sfx.bad();f.className='fb bad';f.innerHTML='<b>TEST '+X.tests+' : ÉCHEC</b>'+m.map(esc).join('<br>');
+  }
+  renderX();
+  var ff=$('#xfb');if(ff&&ff.scrollIntoView)ff.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'});
+}
+
+/* ---------- mémo, infos ---------- */
+function openModal(html,onClose){$('#modal').innerHTML='<div class="ov" id="ov"><div class="modal" role="dialog" aria-modal="true">'+html+'</div></div>';var b=$('#modal [data-act="close"]');if(b)b.focus();}
+function closeModal(){$('#modal').innerHTML='';}
+function memo(){
+  openModal('<h2>MÉMO</h2><h3>Du gène à la protéine</h3><p>Un <b>gène</b> est un morceau d\'ADN qui contient l\'information pour fabriquer une <b>protéine</b>. Gène <b>ON</b> : la cellule le transcrit en ARN messager, puis un ribosome fabrique la protéine (traduction). Gène <b>OFF</b> : pas de transcription, donc pas de protéine. Les protéines font le travail de la cellule.</p>'+
+   '<h3>Qu\'est-ce qu\'une enzyme ?</h3><p>Une <b>enzyme</b> est une protéine qui <b>accélère une réaction chimique</b> de la cellule, sans être détruite. Elle est <b>spécifique</b> : une seule réaction, comme une clé qui n\'ouvre qu\'une serrure.</p><ul class="plain"><li>La molécule transformée est le <b>substrat</b>, le résultat est le <b>produit</b>. Exemple : la <b>lactase</b> transforme le lactose en glucose et galactose.</li><li>Son nom finit souvent par <b>-ase</b> (lactase, tyrosinase, protéase).</li><li>Toutes les protéines ne sont pas des enzymes : la kératine, l\'actine, l\'hémoglobine et l\'insuline n\'en sont pas.</li></ul>'+
+   '<h3>ON et OFF : l\'ADN condensé ou décondensé</h3><p>Dans le noyau, l\'ADN est enroulé autour de protéines appelées <b>histones</b> : c\'est la <b>chromatine</b>. Elle peut être très serrée ou plus ouverte.</p><div class="pair"><div class="off">'+ICON_OFF+'<p><b>OFF</b> : ADN <b>condensé</b>, entouré de nombreuses histones (violet).<br>Le gène est inaccessible : pas de transcription.</p></div><div class="on">'+ICON_ON+'<p><b>ON</b> : ADN <b>décondensé</b>.<br>Le gène est accessible : l\'ARN polymérase (nuage) le transcrit en ARN messager (brin du bas).</p></div></div><p class="small dim">Modèle simplifié : dans la réalité, des facteurs de transcription aident aussi à activer un gène, et les gènes du jeu se trouvent sur des chromosomes différents. Ici, ils sont dessinés sur une seule molécule d\'ADN pour montrer que certains gènes sont ON et d\'autres OFF dans la même cellule.</p>'+
+   '<h3>Gènes d\'entretien et gènes d\'identité</h3><ul class="plain"><li><b>Entretien</b> : fonctions dont toutes les cellules ont besoin (énergie, lecture des gènes, fabrication et recyclage des protéines, forme, réparation de l\'ADN). ON partout.</li><li><b>Identité</b> : ce que fait cette cellule et aucune autre. ON seulement dans elle.</li></ul><div class="row"><button class="btn pri" type="button" data-act="close">Fermer</button></div>');
+}
+SCREENS.about=function(){
+  app.className='';
+  app.innerHTML='<section><div class="panel"><div class="tag">INFOS</div><h3>Ce que ce jeu simplifie</h3><ul class="plain">'+
+   '<li>Un vrai organisme se construit à partir d\'une seule cellule (l\'œuf, ou zygote). Ses tissus apparaissent pendant le développement, grâce à des signaux entre cellules. Ici, tu choisis directement les gènes allumés dans chaque type de cellule.</li>'+
+   '<li>ORGANISME-0 est imaginaire. Ses 40 gènes sont des gènes humains réels, choisis parmi des milliers (un génome humain compte environ 20 000 gènes codant des protéines).</li>'+
+   '<li>« Gène d\'entretien » veut dire exprimé dans presque toutes les cellules, à des niveaux variables. OFF veut parfois dire « presque éteint ».</li><li>Sur les dessins, les gènes sont sur une seule molécule d\'ADN. En réalité, ils sont répartis sur plusieurs chromosomes. La condensation de l\'ADN n\'est qu\'un des mécanismes qui règlent l\'activité des gènes.</li>'+
+   '<li>Dans la réalité, un gène allumé en trop ne tue pas forcément la cellule : le jeu exige une signature nette pour que le raisonnement reste lisible.</li>'+
+   '<li>Le globule rouge mature n\'a plus de noyau : le jeu utilise donc l\'érythroblaste, son précurseur.</li></ul>'+
+   '<h3>Sources</h3><ul class="plain"><li>Human Protein Atlas (proteinatlas.org) et articles de PubMed Central sur les types cellulaires du jeu.</li><li>Police « Press Start 2P » : licence SIL Open Font 1.1.</li><li>Style graphique inspiré des jeux pixel art néon, avec des visuels originaux.</li></ul>'+
+   '<h3>Auteur et licence</h3><p>Jeu créé par M. Scansetti, licence <a style="color:var(--cyan)" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>.</p>'+
+   '<h3>Options</h3><div class="row2"><button class="btn small" type="button" data-act="unlock">Tout débloquer : '+(S.unlockAll?'oui':'non')+'</button><button class="btn small" type="button" data-act="reset">Effacer ma progression</button></div><p class="small dim">La progression est enregistrée dans ce navigateur. Rien n\'est envoyé nulle part.</p></div></section>';
+};
+
+/* ---------- événements ---------- */
+document.addEventListener('click',function(e){
+  var t=e.target,m;
+  if((m=t.closest('[data-info]'))){e.stopPropagation();var id=m.dataset.info;B.open[id]=!B.open[id];renderHand();return;}
+  if((m=t.closest('[data-card]'))&&B){var id2=m.dataset.card;B.sel=(B.sel===id2?null:id2);sfx.tap();renderHand();tryAttempt();return;}
+  if((m=t.closest('[data-slot]'))&&B){var i=parseInt(m.dataset.slot,10);if(B.filled[i])return;B.selSlot=(B.selSlot===i?null:i);sfx.tap();renderSlots();tryAttempt();return;}
+  if((m=t.closest('[data-bulb]'))){introBulb(m.dataset.bulb);return;}
+  if((m=t.closest('[data-case]'))){sfx.tap();go('case',m.dataset.case);return;}
+  if((m=t.closest('[data-fopt]'))){finalAnswer(m.dataset.fopt);return;}
+  if(t.closest('[data-fnext]')){finalNext();return;}
+  if((m=t.closest('[data-xcell]'))){go('expert',m.dataset.xcell);return;}
+  if((m=t.closest('[data-xg]'))){X.on[m.dataset.xg]=!X.on[m.dataset.xg];sfx.tap();renderX();return;}
+  if(t.closest('[data-xtest]')){xTest();return;}
+  if(t.closest('[data-xclear]')){X.on={};renderX();return;}
+  if((m=t.closest('[data-go]'))){sfx.tap();B=null;go(m.dataset.go);return;}
+  if((m=t.closest('[data-act]'))){
+    var a=m.dataset.act;
+    if(a==='memo')memo();else if(a==='close')closeModal();
+    else if(a==='sound'){S.sound=!S.sound;save();updSound();}
+    else if(a==='unlock'){S.unlockAll=!S.unlockAll;save();go('about');}
+    else if(a==='reset'){openModal('<h2>Effacer ?</h2><p>Les scores et la progression seront perdus.</p><div class="row"><button class="btn" type="button" data-act="close">Annuler</button><button class="btn pri" type="button" data-act="reset2">Effacer</button></div>');}
+    else if(a==='reset2'){S=def();save();closeModal();go('title');}
+    return;
+  }
+  if(t.id==='ov')closeModal();
+});
+document.addEventListener('input',function(e){if(e.target.id==='xq'&&X){X.q=e.target.value;renderX();}});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&$('#ov')){closeModal();return;}
+  if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.getAttribute&&(e.target.dataset.card||e.target.dataset.slot)){e.preventDefault();e.target.click();}
+});
+
+updSound();go('title');
+window.__GS={DATA:DATA,S:function(){return S;},go:go,B:function(){return B;},F:function(){return F;},X:function(){return X;},idsOf:idsOf};
+})();
+
+</script>
+</body>
+</html>
