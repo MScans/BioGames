@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diviser pour régner : le cycle cellulaire</title>
+<style>
+:root{
+  --bg:#060608; --panel:rgba(16,16,22,.86); --line:rgba(242,180,65,.3); --ink:#ece6d6; --muted:#9a937c;
+  --amber:#f2b441; --amber2:#ffd98a; --red:#d23a44; --mat:#ff5a4d; --pat:#3fa2ff; --ok:#8fd694; --bad:#ff7b7b;
+  --type:"Courier New",Courier,"Nimbus Mono PS",monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden;
+  background:radial-gradient(900px 520px at 10% -8%,rgba(242,180,65,.17),transparent 62%),radial-gradient(700px 420px at 100% 100%,rgba(63,162,255,.07),transparent 60%),var(--bg)}
+.blinds{position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(100deg,transparent 0 34px,rgba(255,214,140,.05) 34px 58px);
+  -webkit-mask-image:radial-gradient(ellipse 85% 75% at 8% 0%,#000 0,transparent 72%);mask-image:radial-gradient(ellipse 85% 75% at 8% 0%,#000 0,transparent 72%)}
+#dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:89;box-shadow:inset 0 0 170px 40px rgba(0,0,0,.78)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.08;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:var(--serif);font-weight:700;margin:0;line-height:1.25}
+.hud{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(6,6,8,.92);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:var(--serif);font-style:italic;font-size:19px;letter-spacing:.08em;color:var(--amber);text-shadow:0 0 14px rgba(242,180,65,.5);background:none;border:0;padding:6px 4px}
+.hud .sp{flex:1}
+.badge:empty{display:none}
+.cyc{padding:10px 12px;display:flex;gap:12px;align-items:center}
+.cyc svg{flex:none;width:128px;height:128px}
+.cyc svg text{user-select:none}
+.cyc-i{min-width:0;flex:1}
+.cyc-n{font-family:var(--type);font-size:.72rem;letter-spacing:.12em;color:var(--amber);text-transform:uppercase}
+.cyc-d{font-size:.84rem;color:var(--muted);margin:3px 0 6px;line-height:1.35}
+.cyc-h{font-family:var(--type);font-size:.6rem;letter-spacing:.06em;color:#6f6a58;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-family:var(--type);font-size:.64rem;letter-spacing:.03em;padding:4px 7px;border:1px solid var(--line);background:rgba(0,0,0,.45);color:var(--muted);cursor:help}
+.chip.on{background:var(--amber);color:#150e00;border-color:var(--amber);font-weight:700}
+.chip.done{color:var(--amber2);border-color:rgba(242,180,65,.5)}
+.chip.nos{border-style:dashed;cursor:default;color:#7d7766}
+.arc{fill:none;stroke-width:15;stroke:rgba(236,230,214,.14);cursor:help;transition:stroke .4s}
+.arc.done{stroke:rgba(242,180,65,.42)}
+.arc.on{stroke:var(--amber);filter:drop-shadow(0 0 5px rgba(242,180,65,.8))}
+.arc:focus-visible{outline:none;stroke:#fff}
+.chart{width:100%;height:auto;display:block;max-width:640px}
+details summary{cursor:pointer;color:var(--amber2);margin:6px 0}
+@media(max-width:859px){.cyc svg{width:92px;height:92px}.cyc-d,.cyc-h{display:none}.cyc{padding:8px 10px}}
+.badge{font-family:var(--type);font-size:.68rem;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);padding:4px 8px;text-transform:uppercase}
+.btn{font-family:var(--type);letter-spacing:.06em;text-transform:uppercase;font-size:.76rem;line-height:1.3;padding:11px 16px;min-height:46px;background:rgba(0,0,0,.4);color:var(--amber2);border:1px solid var(--amber);transition:background .15s,transform .08s}
+.btn:hover{background:rgba(242,180,65,.14)}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--amber);color:#150e00;font-weight:700}
+.btn.pri:hover{background:var(--amber2)}
+.btn.small{font-size:.68rem;padding:8px 10px}
+.btn[disabled]{opacity:.35;pointer-events:none}
+main{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:16px 14px 28px}
+.panel{background:var(--panel);border:1px solid var(--line);padding:14px;position:relative;backdrop-filter:blur(3px)}
+.panel::before{content:"";position:absolute;left:-1px;top:-1px;width:16px;height:16px;border-left:3px solid var(--amber);border-top:3px solid var(--amber)}
+.panel::after{content:"";position:absolute;right:-1px;bottom:-1px;width:16px;height:16px;border-right:3px solid var(--red);border-bottom:3px solid var(--red)}
+.tag{font-family:var(--type);font-size:.7rem;letter-spacing:.14em;color:var(--amber);margin-bottom:8px;text-transform:uppercase}
+.dim{color:var(--muted)}.small{font-size:.85rem}
+.speaker{font-family:var(--type);font-size:.72rem;letter-spacing:.14em;color:var(--amber);margin-bottom:4px}
+#mtxt{margin:0;font-family:var(--serif);font-style:italic;font-size:1.02rem;min-height:4.6em}
+.typed::after{content:"_";color:var(--amber);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.term{background:none;border:0;border-bottom:1px dotted var(--amber);color:var(--amber2);padding:0;cursor:help;font:inherit;font-style:inherit}
+#tip{position:fixed;z-index:95;max-width:320px;background:#14141b;border:1px solid var(--amber);padding:10px 12px;font-size:.88rem;line-height:1.45;box-shadow:0 8px 30px rgba(0,0,0,.8);display:none}
+#tip b{color:var(--amber2);font-family:var(--serif)}
+/* title */
+.title{text-align:center;padding:18px 0 6px}
+.logo-big{font-family:var(--serif);font-style:italic;font-weight:800;line-height:1.05;font-size:clamp(36px,10vw,72px);letter-spacing:.05em;color:var(--ink);text-shadow:0 0 24px rgba(242,180,65,.55),3px 3px 0 #000;margin:4px 0 6px}
+.sub{font-family:var(--type);font-size:.78rem;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;margin-bottom:14px}
+.det{width:min(260px,62vw);height:auto;margin:6px auto}
+.lvls{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;max-width:760px;margin:16px auto}
+.lvl{text-align:left;background:rgba(0,0,0,.45);border:1px solid var(--line);padding:14px;min-height:96px}
+.lvl:hover{border-color:var(--amber);background:rgba(242,180,65,.08)}
+.lvl b{display:block;font-family:var(--serif);font-size:1.1rem;color:var(--amber2)}
+.lvl i{display:block;font-family:var(--type);font-style:normal;font-size:.66rem;letter-spacing:.12em;color:var(--muted);margin:2px 0 6px;text-transform:uppercase}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+/* hub */
+.hub{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.board{text-align:center}
+.meter{font-family:var(--type);font-size:.8rem;color:var(--amber2);letter-spacing:.08em;line-height:1.9}
+.missions{display:flex;flex-direction:column;gap:8px}
+.mission{display:flex;gap:12px;align-items:center;text-align:left;background:rgba(0,0,0,.4);border:1px solid var(--line);border-left:4px solid var(--amber);padding:10px 12px;min-height:58px;width:100%}
+.mission:hover{background:rgba(242,180,65,.08)}
+.mission .no{font-family:var(--type);font-size:.85rem;color:var(--amber);width:28px;flex:none}
+.mission .nm{font-family:var(--serif);font-size:1.02rem;flex:1}
+.mission .nm small{display:block;font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin-top:2px}
+.mission .st{font-family:var(--type);font-size:.8rem;color:var(--amber)}
+.mission.done{border-left-color:var(--ok)}.mission.done .st{color:var(--ok)}
+.mission.lock{opacity:.4;border-left-color:#444}
+/* lab */
+.lab{display:grid;gap:12px;grid-template-areas:"cyc" "narr" "stage" "fb" "tray" "act"}
+.lab>.cyc{grid-area:cyc}.lab>.narr{grid-area:narr}.lab>.stagecol{grid-area:stage;min-width:0}.lab>.fb{grid-area:fb}.lab>#tray{grid-area:tray}.lab>.actions{grid-area:act}
+@media(min-width:860px){.lab{grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);grid-template-areas:"stage cyc" "stage narr" "stage fb" "stage tray" "stage act";grid-template-rows:auto auto auto auto 1fr;align-items:start}}
+.stagewrap{padding:8px;position:relative;overflow:hidden}
+.stagewrap .tag{position:absolute;left:12px;top:8px;margin:0;z-index:2}
+#stage{width:100%;height:auto;max-height:calc(100vh - 170px);display:block;user-select:none;-webkit-user-select:none}
+#stage.drag{touch-action:none}
+#stage line{pointer-events:none}
+#stage [data-chr],#stage [data-slot],#stage [data-nslot]{cursor:pointer;outline:none}
+#stage [data-chr]:focus-visible{filter:drop-shadow(0 0 5px #fff)}
+.chr.blink{animation:blinkc 1s ease-in-out infinite}
+@keyframes blinkc{50%{opacity:.35}}
+.next{animation:blinkc 1.2s ease-in-out infinite}
+.stagewrap.dead{animation:dead 1.1s ease-out 1}
+@keyframes dead{0%{box-shadow:inset 0 0 0 0 rgba(210,58,68,0)}30%{box-shadow:inset 0 0 140px 30px rgba(210,58,68,.55)}100%{box-shadow:inset 0 0 0 0 rgba(210,58,68,0)}}
+.sea{position:absolute;inset:0;pointer-events:none;display:none}
+.sea span{position:absolute;width:24px;height:24px;border-radius:6px;font:700 .8rem/24px var(--type);text-align:center;color:#0a0a0e;opacity:.8;animation:float 6s ease-in-out infinite alternate}
+@keyframes float{from{transform:translate(-10px,-6px) rotate(-8deg)}to{transform:translate(10px,6px) rotate(8deg)}}
+.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+@media(max-width:520px){.counter{grid-template-columns:repeat(2,1fr)}}
+.cc{border:1px solid var(--line);background:rgba(0,0,0,.55);padding:6px 8px;font-family:var(--type)}
+.cc span{display:block;font-size:.58rem;letter-spacing:.1em;color:var(--muted)}
+.cc b{font-size:1.1rem;color:var(--amber2)}
+.cnote{font-size:.82rem;color:var(--muted);margin-top:6px;min-height:1.3em}
+.fb{border-left:4px solid var(--line);background:rgba(255,255,255,.03);padding:10px 12px;font-size:.93rem;min-height:3.4em}
+.fb>b:first-child{display:block;font-family:var(--type);font-size:.72rem;letter-spacing:.12em;margin-bottom:3px;text-transform:uppercase}
+.fb.good{border-color:var(--ok);background:rgba(143,214,148,.07)}.fb.good>b:first-child{color:var(--ok)}
+.fb.bad{border-color:var(--bad);background:rgba(255,123,123,.07)}.fb.bad>b:first-child{color:var(--bad)}
+.fb.q{border-color:var(--amber)}.fb.q>b:first-child{color:var(--amber)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:859px){.actions:not(:empty){position:sticky;bottom:0;z-index:20;background:rgba(6,6,8,.94);padding:8px 0 calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}}
+#tray{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media(max-width:859px){#tray:not(:empty){position:sticky;bottom:0;z-index:20;background:rgba(6,6,8,.94);padding:8px 0 calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}}
+@media(max-width:700px){.hud{position:static}}
+.nt{width:60px;height:60px;border:2px solid #000;border-radius:10px;font:700 1.5rem var(--type);color:#0a0a0e;background:var(--c);touch-action:none;box-shadow:0 0 14px rgba(255,255,255,.1)}
+.nt.sel{outline:3px solid #fff}
+.ghost{position:fixed;pointer-events:none;z-index:100;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:10px;font:700 1.5rem/56px var(--type);text-align:center;color:#0a0a0e;opacity:.9}
+.pairing{font-family:var(--type);font-size:.78rem;color:var(--muted);text-align:center;width:100%}
+/* reveal */
+.stamp{font-family:var(--type);border:3px solid var(--red);color:var(--red);padding:2px 12px;transform:rotate(-6deg);display:inline-block;letter-spacing:.18em;font-weight:700;font-size:1.05rem;margin-bottom:10px}
+.stamp.ok{border-color:var(--ok);color:var(--ok)}
+.big{font-family:var(--type);font-size:1.4rem;color:var(--amber2)}
+.grade{font-family:var(--serif);font-size:3rem;color:var(--amber);text-shadow:0 0 16px rgba(242,180,65,.5)}
+.callout{border-left:4px solid var(--amber);background:rgba(242,180,65,.07);padding:10px 12px;margin:12px 0}
+.tbl{border-collapse:collapse;width:100%;font-family:var(--type);font-size:.78rem;margin:10px 0}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+.tbl th{color:var(--amber2);background:rgba(242,180,65,.08)}
+.tbl td:first-child{text-align:left;color:var(--muted)}
+.gams{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.gam{border:1px solid var(--line);background:rgba(0,0,0,.5);padding:6px;text-align:center}
+.gam svg{width:100%;height:auto}
+.gam .gt{font-family:var(--type);font-size:.7rem;color:var(--muted)}
+.row2{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;align-items:center}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(2,2,5,.86);z-index:80;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px 12px}
+.modal{background:#111117;border:1px solid var(--amber);box-shadow:0 0 40px rgba(0,0,0,.9);max-width:720px;width:100%;padding:18px 20px;margin:auto}
+.modal h2{font-size:1.2rem;color:var(--amber2);margin-bottom:8px}
+.modal h3{font-size:.95rem;color:var(--amber);margin:14px 0 4px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+ul.plain{padding-left:20px;margin:6px 0}
+.site-foot{position:relative;z-index:2;max-width:1120px;margin:20px auto 40px;padding:10px 14px 0;border-top:1px solid var(--line);display:flex;gap:12px;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.site-foot a{color:var(--muted)}
+.cc2{display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+.cc2 span{font-family:var(--type);font-size:.66rem;margin-left:6px}
+.cc2:hover{color:var(--amber)}
+.site-foot .sig{margin-left:auto;text-align:right;font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--amber)}
+@media(max-width:820px){.hub{grid-template-columns:1fr}}
+@media(max-width:700px){#lvbadge{display:none}.logo{font-size:16px;padding:6px 2px}.hud{padding:6px 10px}#mtxt{min-height:3.4em;font-size:.96rem}.chip{font-size:.58rem;padding:3px 5px}.stagewrap{padding:4px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.blinds{display:none}}
+</style>
+</head>
+<body>
+<div class="blinds" aria-hidden="true"></div>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<header class="hud">
+  <button class="logo" data-go="title" type="button">Diviser pour régner</button>
+  <span class="badge" id="lvbadge"></span>
+  <span class="badge" id="scbadge"></span>
+  <div class="sp"></div>
+  <button class="btn small" data-act="memo" type="button">Mémo</button>
+  <button class="btn small" data-act="sound" type="button" id="btnSound">Son</button>
+  <button class="btn small" data-go="about" type="button">Infos</button>
+</header>
+<main id="app"></main>
+<footer class="site-foot">
+  <a class="cc2" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank" rel="noopener" title="Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.2 9.4a2.6 2.6 0 1 0 0 5.2M16.2 9.4a2.6 2.6 0 1 0 0 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.6" r="1.7" fill="currentColor"/><path d="M9.4 10.4h5.2v4.4h-1.4v3.2h-2.4v-3.2H9.4z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14.6 9.6c-.6-1-1.6-1.4-2.7-1.4-1.7 0-2.9 1.6-2.9 3.8s1.2 3.8 2.9 3.8c1.1 0 2.1-.5 2.7-1.4M12 5.8v12.4M5.2 18.8 18.8 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.2 10.2A4.6 4.6 0 0 0 8 9.4M7.8 13.8A4.6 4.6 0 0 0 16 14.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8 6.8v3.2h3.2M16 17.2v-3.2h-3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>CC BY-NC-SA</span></a>
+  <div class="sig">M. Scansetti</div>
+</footer>
+<div id="modal"></div>
+<div id="tip" role="tooltip"></div>
+<noscript><p style="position:relative;z-index:5;padding:20px">Ce jeu nécessite JavaScript.</p></noscript>
+<script>
+/* =====================================================================
+   DONNÉES PÉDAGOGIQUES : modifiables sans toucher au moteur de jeu
+   ===================================================================== */
+var DATA={
+levels:{
+  premiere:{key:'premiere',name:'Assistant de laboratoire',cls:'Première',
+    desc:'Les bases : copier l\'ADN, compter les chromosomes et les chromatides, passer de 2n à n. Sans crossing-over ni brassage.',
+    crossing:false,alleles:false,dir:false,deep:false},
+  terminale:{key:'terminale',name:'Biologiste moléculaire',cls:'Terminale',
+    desc:'Toute la science : sens 5\'→3\' de la polymérase, allèles, crossing-over, brassage génétique, point de contrôle.',
+    crossing:true,alleles:true,dir:true,deep:true}
+},
+pairs:[
+  {n:1,len:132,tc:.5,genes:['A','B']},
+  {n:2,len:108,tc:.3,genes:['C','D']},
+  {n:3,len:84,tc:.42,genes:['E','F']}
+],
+hues:{A:'#ffd23f',B:'#9cff57',C:'#f4f4ff',D:'#c58bff',E:'#ffa23a',F:'#5ff2c8'},
+gloss:{
+  adn:{t:'ADN',d:'Molécule qui porte l\'information génétique. C\'est une double hélice formée de deux brins, chacun étant une suite de nucléotides (A, T, C, G).'},
+  nucleotide:{t:'Nucléotide',d:'Brique élémentaire de l\'ADN : un sucre, un groupe phosphate et une base azotée (A, T, C ou G).'},
+  compl:{t:'Complémentarité des bases',d:'Les deux brins de l\'ADN sont complémentaires : A s\'apparie toujours avec T (2 liaisons hydrogène), et C avec G (3 liaisons hydrogène).'},
+  helicase:{t:'Hélicase',d:'Enzyme qui ouvre la double hélice en cassant les liaisons hydrogène entre les deux brins.',T:'Elle avance le long de l\'ADN et forme la fourche de réplication.'},
+  polymerase:{t:'ADN polymérase',d:'Enzyme qui fabrique le brin nouveau : elle lit le brin matrice et ajoute, un par un, les nucléotides complémentaires.',T:'Elle lit la matrice de 3\' vers 5\' et allonge le brin nouveau de 5\' vers 3\', en ajoutant chaque nucléotide à l\'extrémité 3\' du brin en cours de synthèse.'},
+  matrice:{t:'Brin matrice',d:'Brin d\'ADN ancien qui sert de modèle pour fabriquer le brin nouveau.'},
+  semi:{t:'Réplication semi-conservative',d:'Après la réplication, chaque molécule d\'ADN fille contient un brin ancien (la matrice) et un brin nouveau.'},
+  sens:{t:'Sens 5\' → 3\'',d:'Chaque brin d\'ADN a une extrémité 5\' et une extrémité 3\'. Les deux brins d\'une double hélice sont antiparallèles : leurs sens sont opposés.'},
+  chromosome:{t:'Chromosome',d:'Structure formée d\'une molécule d\'ADN très enroulée et de protéines. On compte les chromosomes en comptant les centromères.'},
+  chromatide:{t:'Chromatide',d:'Un des deux exemplaires identiques d\'un chromosome répliqué. Les deux chromatides sœurs sont reliées au niveau du centromère.'},
+  centromere:{t:'Centromère',d:'Zone étranglée d\'un chromosome où les chromatides sœurs sont attachées et où s\'accrochent les fibres du fuseau.'},
+  homologues:{t:'Chromosomes homologues',d:'Les deux chromosomes d\'une même paire : même taille, même position du centromère, mêmes gènes. L\'un vient de la mère, l\'autre du père.'},
+  allele:{t:'Allèle',d:'Version d\'un gène. Deux chromosomes homologues portent les mêmes gènes, mais pas forcément les mêmes allèles (par exemple A et a).'},
+  prophase:{t:'Prophase',d:'Début de la division : les chromosomes se condensent et deviennent visibles.'},
+  metaphase:{t:'Métaphase',d:'Les chromosomes sont placés au milieu de la cellule, sur la plaque équatoriale.'},
+  anaphase:{t:'Anaphase',d:'Les chromosomes (ou les chromatides) sont tirés vers les pôles opposés par les fibres du fuseau.'},
+  telophase:{t:'Télophase',d:'Les chromosomes arrivent aux pôles et une enveloppe nucléaire se reforme autour de chaque lot.'},
+  fuseau:{t:'Fuseau de division',d:'Réseau de fibres (microtubules) tendu entre les deux pôles de la cellule. Il attache les chromosomes et les déplace.'},
+  plaque:{t:'Plaque équatoriale',d:'Plan situé au milieu de la cellule, à égale distance des deux pôles, où se placent les chromosomes en métaphase.'},
+  controle:{t:'Point de contrôle du fuseau',d:'Mécanisme de surveillance : tant que tous les chromosomes ne sont pas correctement attachés au fuseau, l\'anaphase est bloquée. Si l\'erreur persiste, la cellule peut mourir (apoptose).'},
+  separase:{t:'Séparase',d:'Enzyme qui coupe les cohésines, protéines qui maintiennent collées les chromatides sœurs. Les chromatides peuvent alors se séparer.'},
+  bivalent:{t:'Bivalent',d:'Association de deux chromosomes homologues appariés en prophase I : 4 chromatides en tout.'},
+  crossing:{t:'Enjambement (crossing-over)',d:'Échange de morceaux entre deux chromatides non sœurs de chromosomes homologues, en prophase I. Il crée de nouvelles combinaisons d\'allèles (brassage intrachromosomique).'},
+  chiasma:{t:'Chiasma',d:'Point de contact entre deux chromatides non sœurs, où a lieu l\'échange.'},
+  brassage:{t:'Brassage interchromosomique',d:'Répartition au hasard des chromosomes homologues de chaque paire de part et d\'autre de la plaque, en métaphase I. Pour 3 paires, 2³ = 8 types de gamètes sont possibles.'},
+  haploide:{t:'Haploïde (n)',d:'Cellule qui n\'a qu\'un chromosome de chaque paire (ici n = 3).'},
+  diploide:{t:'Diploïde (2n)',d:'Cellule qui a deux chromosomes de chaque paire (ici 2n = 6).'},
+  gamete:{t:'Gamète',d:'Cellule reproductrice haploïde (spermatozoïde, ovule).'},
+  zygote:{t:'Zygote',d:'Première cellule d\'un nouvel individu, formée par la fusion de deux gamètes. Elle est diploïde.'},
+  cytocinese:{t:'Cytocinèse',d:'Division du cytoplasme qui sépare la cellule en deux cellules filles.'},
+  g1:{t:'Phase G1',d:'Première phase de l\'interphase : la cellule grandit et fonctionne. Chaque chromosome n\'a qu\'une chromatide (ADN = Q).'},
+  s:{t:'Phase S',d:'Phase de synthèse : l\'ADN est répliqué. Chaque chromosome passe de 1 à 2 chromatides (ADN : Q → 2Q).'},
+  g2:{t:'Phase G2',d:'Seconde phase de croissance : la cellule vérifie la copie de son ADN et se prépare à se diviser. Les chromosomes ont 2 chromatides.'},
+  m:{t:'Phase M',d:'Phase de division de la cellule : mitose ou méiose, avec le partage du cytoplasme (cytocinèse). Elle suit la phase G2.'},
+  m_mit:{t:'Phase M : mitose',d:'Une seule division. Elle donne 2 cellules filles identiques à la cellule mère (2n).'},
+  m_mei:{t:'Phase M : méiose',d:'Deux divisions qui se suivent, sans réplication de l\'ADN entre elles. Elles donnent 4 cellules haploïdes (n).',T:'Ces cellules sont génétiquement différentes grâce au brassage (enjambement et répartition au hasard des chromosomes).'},
+  mitose:{t:'Mitose',d:'Division cellulaire qui conserve le nombre de chromosomes : une cellule 2n donne 2 cellules filles 2n identiques.'},
+  meiose:{t:'Méiose',d:'Suite de deux divisions qui réduit de moitié le nombre de chromosomes : une cellule 2n donne 4 cellules n.'},
+  somatique:{t:'Cellule somatique',d:'Cellule du corps (peau, muscle, foie...) qui n\'est pas destinée à former des gamètes. Elle se divise par mitose.'},
+  germinale:{t:'Cellule germinale',d:'Cellule de la lignée germinale (dans les testicules ou les ovaires), qui entre en méiose pour former des gamètes.'},
+  Q:{t:'Q (quantité d\'ADN)',d:'Unité de comparaison : Q est la quantité d\'ADN d\'une cellule diploïde avant la réplication. Après la réplication, elle vaut 2Q.'}
+},
+quiz:[
+  {q:'Une cellule 2n = 6 est en métaphase de mitose. Combien de chromatides compte-t-elle ?',o:['6','12','3','24'],a:1,why:'Il y a 6 chromosomes, chacun avec 2 chromatides : 6 × 2 = 12.'},
+  {q:'La même cellule passe en anaphase de mitose. Combien de chromosomes compte-t-elle (cellule entière) ?',o:['6','12','3','24'],a:1,why:'Chaque chromatide devient un chromosome : 12 chromosomes à une chromatide (6 à chaque pôle).'},
+  {q:'Une cellule 2n = 6 vient de finir la méiose I. Que contient chaque cellule fille ?',o:['3 chromosomes à 2 chromatides','6 chromosomes à 1 chromatide','3 chromosomes à 1 chromatide','6 chromosomes à 2 chromatides'],a:0,why:'Ce sont les chromosomes homologues qui se séparent : n = 3 chromosomes, qui ont encore 2 chromatides.'},
+  {q:'Avec Q la quantité d\'ADN d\'une cellule diploïde avant réplication, quelle est celle d\'un gamète ?',o:['Q','2Q','Q/2','Q/4'],a:2,why:'L\'ADN passe de Q à 2Q (réplication), puis à Q (méiose I) et Q/2 (méiose II).'},
+  {q:'Pendant quelle phase du cycle cellulaire l\'ADN est-il répliqué ?',o:['G1','S','G2','M'],a:1,why:'S est la phase de synthèse de l\'ADN. G1 et G2 sont des phases de croissance, M est la division.'},
+  {q:'Une cellule 2n = 6 est en phase G2. Que contient-elle ?',o:['6 chromosomes à 1 chromatide','6 chromosomes à 2 chromatides','12 chromosomes à 1 chromatide','3 chromosomes à 2 chromatides'],a:1,why:'L\'ADN a été copié en phase S : il y a toujours 6 chromosomes, mais chacun a 2 chromatides.'},
+  {q:'Quelle cellule peut entrer en méiose ?',o:['Une cellule somatique, comme une cellule de peau','Une cellule germinale','N\'importe quelle cellule du corps','Un gamète'],a:1,why:'Seules les cellules germinales (testicules, ovaires) entrent en méiose pour produire des gamètes. Les cellules somatiques se divisent par mitose.'},
+  {q:'Quand l\'ADN est-il répliqué ?',o:['Avant la mitose ou la méiose I, une seule fois','Entre la méiose I et la méiose II','Pendant l\'anaphase','Pendant la métaphase'],a:0,why:'Il n\'y a qu\'une seule réplication, avant la division. La méiose est donc deux divisions pour une réplication.'},
+  {q:'Combien de cellules obtient-on à la fin d\'une mitose, puis à la fin d\'une méiose ?',o:['2 puis 4','4 puis 2','2 puis 2','4 puis 4'],a:0,why:'Une mitose donne 2 cellules filles. La méiose (2 divisions) en donne 4.'},
+  {q:'Une cellule fille issue d\'une mitose est :',o:['identique à la cellule mère (2n)','haploïde (n)','différente de la cellule mère','sans chromatides'],a:0,why:'La mitose conserve le nombre de chromosomes et l\'information génétique : 2 cellules identiques, en 2n.'},
+  {q:'Entre quelles chromatides a lieu un enjambement (crossing-over) ?',o:['Deux chromatides sœurs','Deux chromatides non sœurs de chromosomes homologues','Deux chromosomes non homologues','Deux cellules voisines'],a:1,lv:'T',why:'Des chromatides sœurs sont identiques : un échange ne changerait rien. L\'échange se fait entre chromatides non sœurs d\'homologues.'},
+  {q:'Sans crossing-over, combien de types de gamètes différents un organisme 2n = 6 peut-il produire (brassage interchromosomique) ?',o:['2','4','6','8'],a:3,lv:'T',why:'Chaque paire s\'oriente indépendamment : 2 × 2 × 2 = 2³ = 8 combinaisons.'},
+  {q:'L\'ADN polymérase allonge le brin nouveau :',o:['de 5\' vers 3\', en ajoutant à l\'extrémité 3\'','de 3\' vers 5\'','dans les deux sens','sans brin matrice'],a:0,lv:'T',why:'Elle lit la matrice de 3\' vers 5\' et ne sait ajouter un nucléotide qu\'à l\'extrémité 3\' du brin en cours de synthèse.'}
+]
+};
+
+/* =====================================================================
+   MOTEUR
+   ===================================================================== */
+(function(){
+'use strict';
+var RU=335,RV=230,CUT=.76,FG=[.6,.92],SEP=16,PX=215;
+var COL={M:'#ff5a4d',P:'#3fa2ff',X:'#d9d1bc'};
+var BC={A:'#ffd23f',T:'#ff8a3d',C:'#5ff2c8',G:'#c58bff'};
+var COMP={A:'T',T:'A',C:'G',G:'C'};
+var REP_T=['A','T','G','C','C','T'];
+var UB=[-225,-135,-45,45,135,225];
+var CANCEL={cancel:true};
+var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+
+/* ---------- stockage ---------- */
+var KEY='diviserpourregner.v1';
+function def(){return {level:null,g:{premiere:null,terminale:null},sound:true};}
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){var d=Object.assign(def(),s);d.g=Object.assign({premiere:null,terminale:null},s.g||{});return d;}}catch(e){}return def();}
+var S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function LV(){return DATA.levels[S.level]||DATA.levels.premiere;}
+function G(){var k=S.level;if(!S.g[k])S.g[k]={stage:'g1A',first:null,sc:{},er:{}};return S.g[k];}
+function quizList(){var t=LV();return DATA.quiz.filter(function(q){return !q.lv||(q.lv==='T'&&t.key==='terminale');});}
+function totalScore(){var g=S.level&&S.g[S.level],s=0;if(g)for(var k in g.sc)s+=g.sc[k];return s;}
+function maxTotal(){return 300+100+2*580+400+(LV().crossing?650:500)+100+50*quizList().length;}
+function rank(){var r=totalScore()/maxTotal();return r>=.9?'S':(r>=.75?'A':(r>=.55?'B':'C'));}
+
+/* ---------- utilitaires ---------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function rich(t){return t.replace(/\{([^|}]+)\|(\w+)\}/g,function(m,l,k){return '<button type="button" class="term" data-term="'+k+'">'+l+'</button>';});}
+function plainT(t){return t.replace(/\{([^|}]+)\|(\w+)\}/g,'$1').replace(/<[^>]+>/g,'');}
+function ease(k){return k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;}
+function sm(x){return x<=0?0:(x>=1?1:x*x*(3-2*x));}
+function lerp(a,b,k){return a+(b-a)*k;}
+function noop(){}
+
+/* ---------- sons (Web Audio) ---------- */
+var AC=null,AMB=null,GEST=false;
+function actx(){if(!GEST)return null;if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;try{AC=new A();}catch(e){return null;}}if(AC.state==='suspended')AC.resume();return AC;}
+function tone(f,d,type,when,vol,f2){
+  if(!S.sound)return;var a=actx();if(!a)return;
+  try{var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+(when||0);
+    o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol||.05,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}
+}
+function noise(d,vol,when){
+  if(!S.sound)return;var a=actx();if(!a)return;
+  try{var n=Math.max(1,Math.floor(a.sampleRate*d)),b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);
+    for(var i=0;i<n;i++)c[i]=(Math.random()*2-1)*(1-i/n);
+    var s=a.createBufferSource(),g=a.createGain(),h=a.createBiquadFilter();h.type='highpass';h.frequency.value=1800;
+    g.gain.value=vol||.05;s.buffer=b;s.connect(h);h.connect(g);g.connect(a.destination);s.start(a.currentTime+(when||0));}catch(e){}
+}
+function ambient(){
+  if(AMB||!S.sound)return;var a=actx();if(!a)return;
+  try{var g=a.createGain();g.gain.value=.018;var lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=260;
+    [55,82.5,110.4].forEach(function(f,i){var o=a.createOscillator(),og=a.createGain();o.type=i?'sine':'triangle';o.frequency.value=f;og.gain.value=i?.5:1;o.connect(og);og.connect(lp);o.start();});
+    var lfo=a.createOscillator(),lg=a.createGain();lfo.frequency.value=.12;lg.gain.value=.006;lfo.connect(lg);lg.connect(g.gain);lfo.start();
+    lp.connect(g);g.connect(a.destination);AMB=g;}catch(e){}
+}
+var sfx={
+  click:function(){noise(.03,.06);tone(180,.05,'square',0,.025);},
+  ok:function(){tone(523,.12,'triangle',0,.06);tone(784,.2,'triangle',.1,.06);},
+  bad:function(){tone(150,.25,'sawtooth',0,.05);},
+  win:function(){[392,494,587,784].forEach(function(f,i){tone(f,.2,'triangle',i*.11,.06);});},
+  zip:function(){for(var i=0;i<16;i++)tone(240+i*40,.05,'sawtooth',i*.16,.025);},
+  alarm:function(){for(var i=0;i<6;i++)tone(i%2?420:620,.2,'square',i*.2,.035);},
+  tick:function(){tone(900,.012,'square',0,.008);}
+};
+function updSound(){var b=$('#btnSound');if(b)b.textContent=S.sound?'Son : oui':'Son : non';if(AMB)AMB.gain.value=S.sound?.018:0;}
+
+/* ---------- poussière dans le faisceau ---------- */
+(function(){
+  var cv=$('#dust');if(!cv||reduce)return;var cx=cv.getContext('2d'),P=[],W=0,H=0,last=0;
+  function rs(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}rs();window.addEventListener('resize',rs);
+  for(var i=0;i<28;i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.4,vx:(Math.random()-.3)*.008,vy:Math.random()*.01+.002,a:Math.random()*.4+.1});
+  function f(t){requestAnimationFrame(f);if(document.hidden||t-last<50)return;var dt=(t-last)/1000;last=t;cx.clearRect(0,0,W,H);
+    P.forEach(function(p){p.x+=p.vx*dt*8;p.y+=p.vy*dt*8;if(p.y>1){p.y=0;p.x=Math.random();}if(p.x<0||p.x>1)p.x=Math.random();
+      var lit=Math.max(0,1-(p.x*1.1+p.y*.6));cx.fillStyle='rgba(255,214,140,'+(p.a*lit)+')';cx.beginPath();cx.arc(p.x*W,p.y*H,p.r,0,6.3);cx.fill();});}
+  requestAnimationFrame(f);
+})();
+
+/* ---------- narrateur ---------- */
+var tw=null;
+function say(text){
+  var el=$('#mtxt');if(!el)return;clearInterval(tw);
+  var pl=plainT(text),rc=rich(text);
+  if(reduce){el.classList.remove('typed');el.innerHTML=rc;return;}
+  var i=0,n=0;el.textContent='';el.classList.add('typed');
+  tw=setInterval(function(){i+=2;n++;if(n%6===0)sfx.tick();el.textContent=pl.slice(0,i);if(i>=pl.length){clearInterval(tw);el.classList.remove('typed');el.innerHTML=rc;}},16);
+  el.onclick=function(e){if(e.target.closest&&e.target.closest('.term'))return;clearInterval(tw);el.classList.remove('typed');el.innerHTML=rc;};
+}
+function fb(kind,title,html){var f=$('#fb');if(!f)return;f.className='fb '+(kind||'');f.innerHTML=(title?'<b>'+esc(title)+'</b>':'')+rich(html||'');}
+
+/* ---------- bulles d'aide ---------- */
+function showTip(el){
+  var g=DATA.gloss[el.dataset.term],tip=$('#tip');if(!g)return;
+  var extra=(g.T&&LV().key==='terminale')?' '+g.T:'';
+  tip.innerHTML='<b>'+esc(g.t)+'</b><br>'+esc(g.d+extra);tip.style.display='block';
+  var r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=Math.max(8,Math.min(r.left,window.innerWidth-w-8)),y=r.bottom+8;if(y+h>window.innerHeight-8)y=Math.max(8,r.top-h-8);
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hideTip(){var t=$('#tip');if(t)t.style.display='none';}
+
+/* ---------- géométrie de la scène ---------- */
+var ORI='L',VBX={L:[800,520],P:[520,720]};
+function setOri(){ORI=window.innerWidth>=860?'L':'P';}
+function dims(){var d=VBX[ORI];return {W:d[0],H:d[1]};}
+function mp(u,v){var d=dims();return ORI==='L'?[d.W/2+u,d.H/2+v]:[d.W/2+v,d.H/2+u];}
+function unpt(x,y){var d=dims();return ORI==='L'?[x-d.W/2,y-d.H/2]:[y-d.H/2,x-d.W/2];}
+function r1(n){return Math.round(n*10)/10;}
+function ps(a){return r1(a[0])+' '+r1(a[1]);}
+function mapL(u,v){return [u,v];}
+function svgPt(e){var svg=$('#stage');var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var m=svg.getScreenCTM();if(!m)return [0,0];var q=pt.matrixTransform(m.inverse());return unpt(q.x,q.y);}
+
+/* ---------- modèle des chromosomes ---------- */
+function mkChromo(pair,origin){
+  var pr=DATA.pairs[pair-1];
+  var al=pr.genes.map(function(g){return origin==='M'?g:g.toLowerCase();});
+  return {id:origin+pair,pair:pair,origin:origin,ch:[{o:[origin,origin],al:al,sg:1}],u:0,v:0,s:0,vee:0,d:1,pole:0,sel:false,blink:false,op:1,slot:null,home:null,label:true};
+}
+function cloneChd(h,sg){return {o:h.o.slice(),al:h.al.slice(),sg:sg};}
+function makeSet(rep){
+  var a=[];
+  [1,2,3].forEach(function(n){['M','P'].forEach(function(o){
+    var c=mkChromo(n,o);
+    if(rep){c.ch.push(cloneChd(c.ch[0],-1));c.s=SEP;}
+    a.push(c);});});
+  return a;
+}
+function cloneChromo(c){var n={};for(var k in c)n[k]=c[k];n.ch=c.ch.slice();return n;}
+function splitSis(c,flip){
+  var a=cloneChromo(c),b=cloneChromo(c);a.ch=[c.ch[0]];b.ch=[c.ch[1]];a.id=c.id+'a';b.id=c.id+'b';
+  a.sel=b.sel=false;a.slot=b.slot=null;a.d=a.pole=flip?1:-1;b.d=b.pole=flip?-1:1;return [a,b];
+}
+
+/* ---------- dessin des chromosomes ---------- */
+function chromSVG(c,map,o){
+  o=o||{};var pr=DATA.pairs[c.pair-1],L=pr.len,p=L*pr.tc,q=L-p;
+  var cen=map(c.u,c.v),halo='',body='',bands='',hit='';
+  var geo=c.ch.map(function(ch){
+    var sg=ch.sg,pe=[-p,-sg*c.s],qe=[q,sg*c.s];
+    if(c.vee>0){var d=c.d,pv=[-d*p*.85,-sg*p*.5],qv=[-d*q*.85,sg*q*.5];pe=[lerp(pe[0],pv[0],c.vee),lerp(pe[1],pv[1],c.vee)];qe=[lerp(qe[0],qv[0],c.vee),lerp(qe[1],qv[1],c.vee)];}
+    return {pe:pe,qe:qe};
+  });
+  geo.forEach(function(g,i){
+    var ch=c.ch[i],A=map(c.u+g.pe[0],c.v+g.pe[1]),Q=map(c.u+g.qe[0],c.v+g.qe[1]);
+    var d='M'+ps(A)+'L'+ps(cen)+'L'+ps(Q);
+    halo+='<path d="'+d+'" stroke="'+COL[ch.o[0]]+'" stroke-opacity="'+(c.sel?'.5':'.16')+'" stroke-width="'+(c.sel?26:20)+'" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    body+='<path d="'+d+'" stroke="#000" stroke-opacity=".65" stroke-width="12.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    body+='<path d="'+d+'" stroke="'+COL[ch.o[0]]+'" stroke-width="8.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    if(ch.o[1]!==ch.o[0]){
+      var cp=[lerp(cen[0],Q[0],CUT),lerp(cen[1],Q[1],CUT)];
+      body+='<path d="M'+ps(cp)+'L'+ps(Q)+'" stroke="'+COL[ch.o[1]]+'" stroke-width="8.5" fill="none" stroke-linecap="butt"/><circle cx="'+r1(Q[0])+'" cy="'+r1(Q[1])+'" r="4.25" fill="'+COL[ch.o[1]]+'"/>';
+    }
+    if(o.alleles&&ch.al){
+      ch.al.forEach(function(al,gi){
+        if(!al)return;var P=[lerp(cen[0],Q[0],FG[gi]),lerp(cen[1],Q[1],FG[gi])],up=al===al.toUpperCase(),hue=DATA.hues[al.toUpperCase()];
+        bands+='<circle cx="'+r1(P[0])+'" cy="'+r1(P[1])+'" r="7.6" fill="'+(up?hue:'#0a0a0e')+'" stroke="'+(up?'#000':hue)+'" stroke-width="'+(up?1.6:2.2)+'"/>'+
+          '<text x="'+r1(P[0])+'" y="'+r1(P[1]+.5)+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-weight="700" font-size="10.5" fill="'+(up?'#0a0a0e':hue)+'">'+al+'</text>';
+      });
+    }
+    if(i===0)hit='<path d="M'+ps(A)+'L'+ps(cen)+'L'+ps(Q)+'" stroke="transparent" stroke-width="34" fill="none" stroke-linecap="round" pointer-events="stroke"/>';
+  });
+  var cdot='<circle cx="'+r1(cen[0])+'" cy="'+r1(cen[1])+'" r="5.2" fill="#0a0a0e" stroke="#f4efe0" stroke-width="1.6"/>';
+  var lab='';
+  if(o.label&&c.label&&c.vee===0&&c.origin!=='X'){var lp=map(c.u-p-18,c.v);lab='<text x="'+r1(lp[0])+'" y="'+r1(lp[1])+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-size="11" fill="'+COL[c.origin]+'" opacity=".95">'+c.origin+c.pair+'</text>';}
+  var tab=o.interactive?' data-chr="'+c.id+'" data-fk="c'+c.id+'" tabindex="0" role="button" aria-label="Chromosome '+c.origin+c.pair+'"':'';
+  return '<g class="chr'+(c.blink?' blink':'')+'"'+tab+' opacity="'+c.op+'">'+halo+body+bands+cdot+lab+(o.interactive?hit:'')+'</g>';
+}
+
+/* ---------- cellule ---------- */
+function cellPath(c){
+  var pts=[],N=96;
+  for(var i=0;i<N;i++){var th=2*Math.PI*i/N,cs=Math.cos(th),u=c.u+c.ru*cs,pinch=1-c.w*Math.exp(-Math.pow(cs/.22,2)),v=c.v+c.rv*Math.sin(th)*pinch;pts.push(ps(mp(u,v)));}
+  return 'M'+pts.join('L')+'Z';
+}
+function stdCell(){return {u:0,v:0,ru:RU,rv:RV,w:0,op:1};}
+
+/* ---------- scène ---------- */
+var SC=null,RUN=0,ACT=null,DR=null,MOK=null,LAST=null;
+function K(id){for(var i=0;i<SC.chr.length;i++)if(SC.chr[i].id===id)return SC.chr[i];return null;}
+function defs(){var d=dims();return '<defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(236,230,214,.05)" stroke-width="1"/></pattern></defs><rect x="0" y="0" width="'+d.W+'" height="'+d.H+'" fill="url(#grid)"/>';}
+function draw(){
+  var svg=$('#stage');if(!svg||!SC)return;
+  var fk=(document.activeElement&&document.activeElement.getAttribute&&svg.contains(document.activeElement))?document.activeElement.getAttribute('data-fk'):null;
+  var d=dims();svg.setAttribute('viewBox','0 0 '+d.W+' '+d.H);svg.classList.toggle('drag',!!(SC.h&&SC.h.drag));
+  var b=SC.mode==='rep'?drawRep():(SC.mode==='tet'?drawTet():drawCell());
+  svg.innerHTML=defs()+b;
+  if(fk){var el=svg.querySelector('[data-fk="'+fk+'"]');if(el&&el.focus)el.focus({preventScroll:true});}
+}
+function pattern(){var k=null;SC.slots.forEach(function(s){if(s.occ&&!k)k=s.kind;});return k;}
+function drawCell(){
+  var o='',al=LV().alleles;
+  SC.cells.forEach(function(c){if(c.op<=0)return;o+='<path d="'+cellPath(c)+'" fill="rgba(255,236,200,.035)" stroke="rgba(236,230,214,.62)" stroke-width="2.4" stroke-linejoin="round" opacity="'+c.op+'"/>';});
+  SC.nuc.forEach(function(n){if(n.op<=0)return;var a=mp(n.u,n.v),rx=ORI==='L'?n.ru:n.rv,ry=ORI==='L'?n.rv:n.ru;
+    o+='<ellipse cx="'+r1(a[0])+'" cy="'+r1(a[1])+'" rx="'+rx+'" ry="'+ry+'" fill="rgba(120,140,255,.05)" stroke="rgba(160,175,255,.55)" stroke-width="1.6" stroke-dasharray="5 4" opacity="'+n.op+'"/>';});
+  if(SC.plate){
+    var a=mp(0,-RV*.9),b=mp(0,RV*.9),t=mp(0,-RV*.96);
+    o+='<line x1="'+r1(a[0])+'" y1="'+r1(a[1])+'" x2="'+r1(b[0])+'" y2="'+r1(b[1])+'" stroke="rgba(242,180,65,.4)" stroke-width="1.6" stroke-dasharray="7 6"/>';
+    var lp=ORI==='L'?mp(0,RV*.97):mp(-12,RV*.97);o+='<text x="'+r1(lp[0])+'" y="'+r1(lp[1])+'" text-anchor="'+(ORI==='L'?'middle':'end')+'" font-family="Courier New,monospace" font-size="11" fill="rgba(242,180,65,.7)" data-term="plaque">plaque équatoriale</text>';
+  }
+  var pat=SC.slots.length?pattern():null;
+  SC.slots.forEach(function(s){
+    var dim=pat&&s.kind!==pat,a=mp(s.u,s.v),op=dim?.12:.85;
+    if(s.kind==='pair'&&s.side==='L'){var l1=mp(s.u,s.v),l2=mp(-s.u,s.v);o+='<line x1="'+r1(l1[0])+'" y1="'+r1(l1[1])+'" x2="'+r1(l2[0])+'" y2="'+r1(l2[1])+'" stroke="rgba(242,180,65,'+(dim?.05:.22)+')" stroke-width="1.4" stroke-dasharray="3 5"/>';}
+    if(!s.occ){
+      if(s.kind==='plate')o+='<path d="M'+ps([a[0],a[1]-8])+'L'+ps([a[0]+8,a[1]])+'L'+ps([a[0],a[1]+8])+'L'+ps([a[0]-8,a[1]])+'Z" fill="rgba(242,180,65,.18)" stroke="rgba(242,180,65,'+op+')" stroke-width="1.6"/>';
+      else o+='<circle cx="'+r1(a[0])+'" cy="'+r1(a[1])+'" r="8" fill="rgba(242,180,65,.08)" stroke="rgba(242,180,65,'+op+')" stroke-width="1.6" stroke-dasharray="3 2"/>';
+      if(!dim)o+='<circle cx="'+r1(a[0])+'" cy="'+r1(a[1])+'" r="26" fill="transparent" data-slot="'+s.id+'" data-fk="s'+s.id+'" tabindex="0" role="button" aria-label="Emplacement"/>';
+    }
+  });
+  Object.keys(SC.rowBad||{}).forEach(function(r){var y=[-110,0,110][r],a=mp(-160,y-34),b=mp(160,y+34);var x=Math.min(a[0],b[0]),yy=Math.min(a[1],b[1]);o+='<rect x="'+r1(x)+'" y="'+r1(yy)+'" width="'+r1(Math.abs(b[0]-a[0]))+'" height="'+r1(Math.abs(b[1]-a[1]))+'" rx="8" fill="rgba(210,58,68,.1)" stroke="rgba(255,123,123,.8)" stroke-width="2" stroke-dasharray="6 4"/>';});
+  if(SC.spin>0){
+    var pu=SC.pu;
+    SC.chr.forEach(function(c){var poles=c.pole?[c.pole]:[-1,1];poles.forEach(function(pl){var A=mp(pl*pu,0),B=mp(c.u,c.v);o+='<line x1="'+r1(A[0])+'" y1="'+r1(A[1])+'" x2="'+r1(B[0])+'" y2="'+r1(B[1])+'" stroke="rgba(242,180,65,'+(.3*SC.spin)+')" stroke-width="1.2"/>';});});
+    [-1,1].forEach(function(pl){var A=mp(pl*pu,0);o+='<g data-term="fuseau" stroke="rgba(242,180,65,'+SC.spin+')" stroke-width="2"><circle cx="'+r1(A[0])+'" cy="'+r1(A[1])+'" r="5" fill="#f2b441"/><path d="M'+ps([A[0]-10,A[1]])+'H'+r1(A[0]+10)+'M'+ps([A[0],A[1]-10])+'V'+r1(A[1]+10)+'"/></g>';});
+  }
+  (SC.links||[]).forEach(function(l){var a=K(l[0]),b=K(l[1]);if(!a||!b)return;var A=mp(a.u,a.v),B=mp(b.u,b.v);o+='<line x1="'+r1(A[0])+'" y1="'+r1(A[1])+'" x2="'+r1(B[0])+'" y2="'+r1(B[1])+'" stroke="rgba(242,180,65,.7)" stroke-width="2" stroke-dasharray="4 5"/>';});
+  var inter=!!(SC.h&&(SC.h.tap||SC.h.drag));
+  SC.chr.forEach(function(c){o+=chromSVG(c,mp,{alleles:al,label:true,interactive:inter});});
+  (SC.labels||[]).forEach(function(l){var a=mp(l.u,l.v);o+='<text x="'+r1(a[0])+'" y="'+r1(a[1])+'" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="rgba(236,230,214,.75)">'+esc(l.t)+'</text>';});
+  return o;
+}
+
+/* ---------- tétrade (crossing-over) ---------- */
+function drawTet(){
+  var o='',al=LV().alleles;
+  SC.bv.forEach(function(b,bi){
+    var vg=[-150,0,150][bi];
+    var a=mp(-175,vg);o+='<text x="'+r1(a[0])+'" y="'+r1(a[1])+'" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="rgba(236,230,214,.7)">PAIRE '+b.pair+'</text>';
+    [0,2].forEach(function(k){var A=mp(0,vg+[-54,-18,18,54][k]+0),B=mp(0,vg+[-54,-18,18,54][k+1]);o+='<line x1="'+r1(A[0])+'" y1="'+r1(A[1])+'" x2="'+r1(B[0])+'" y2="'+r1(B[1])+'" stroke="rgba(242,180,65,.55)" stroke-width="3"/>';});
+    b.rods.forEach(function(c){o+=chromSVG(c,mp,{alleles:al,label:true,interactive:true});});
+    if(b.done){var pr=DATA.pairs[b.pair-1],uq=(pr.len-pr.len*pr.tc)*CUT;var r1c=b.done[0],r2c=b.done[1];
+      var A=mp(uq,vg+[-54,-18,18,54][r1c]),B=mp(uq,vg+[-54,-18,18,54][r2c]);
+      o+='<line x1="'+r1(A[0])+'" y1="'+r1(A[1])+'" x2="'+r1(B[0])+'" y2="'+r1(B[1])+'" stroke="#fff" stroke-width="2.5" stroke-dasharray="3 3" opacity=".8" data-term="chiasma"/><circle cx="'+r1((A[0]+B[0])/2)+'" cy="'+r1((A[1]+B[1])/2)+'" r="5" fill="#fff" data-term="chiasma"/>';}
+  });
+  return o;
+}
+
+/* ---------- réplication ---------- */
+function seg(u0,v0,u1,v1,col,w,ex){var a=mp(u0,v0),b=mp(u1,v1);return '<path d="M'+ps(a)+'L'+ps(b)+'" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" fill="none"'+(ex||'')+'/>';}
+function tabRect(u,v0,v1,fill,op,stroke,dash,txt,data){
+  var a=mp(u-25,v0),b=mp(u+25,v1),x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]),w=Math.abs(a[0]-b[0]),h=Math.abs(a[1]-b[1]);
+  var s='<rect x="'+r1(x)+'" y="'+r1(y)+'" width="'+r1(w)+'" height="'+r1(h)+'" rx="7" fill="'+fill+'" opacity="'+op+'" stroke="'+(stroke||'#000')+'" stroke-width="'+(dash?2:1.5)+'"'+(dash?' stroke-dasharray="5 4"':'')+(data||'')+'/>';
+  if(txt)s+='<text x="'+r1(x+w/2)+'" y="'+r1(y+h/2+1)+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-weight="700" font-size="20" fill="#0a0a0e" opacity="'+op+'" pointer-events="none">'+txt+'</text>';
+  return s;
+}
+function lab53(u,v,t){var a=mp(u,v);return '<text x="'+r1(a[0])+'" y="'+r1(a[1])+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-size="13" fill="rgba(236,230,214,.8)">'+t+'</text>';}
+function polyV(fn,u0,u1,n){var p=[];for(var i=0;i<=n;i++){var u=u0+(u1-u0)*i/n;p.push(ps(mp(u,fn(u))));}return 'M'+p.join('L');}
+function strandPath(d,col,w){return '<path d="'+d+'" stroke="#000" stroke-opacity=".6" stroke-width="'+(w+4)+'" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="'+d+'" stroke="'+col+'" stroke-width="'+w+'" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';}
+var OLD='#e9e2d0',NEW='#f2b441',KH=2*Math.PI/90;
+function helicaseG(u){
+  var a=mp(u,0);return '<g data-term="helicase" data-fk="hel" tabindex="0" role="button" aria-label="Hélicase" style="cursor:help"><circle cx="'+r1(a[0])+'" cy="'+r1(a[1])+'" r="34" fill="rgba(242,180,65,.12)" stroke="#f2b441" stroke-width="5"/>'+
+    '<path d="M'+ps(mp(u+30,0))+'L'+ps(mp(u-12,-18))+'L'+ps(mp(u-12,18))+'Z" fill="#f2b441" stroke="#000" stroke-width="1.5"/><text x="'+r1(a[0])+'" y="'+r1(a[1]+50)+'" text-anchor="middle" font-family="Courier New,monospace" font-size="11" fill="#ffd98a">hélicase</text></g>';
+}
+function polG(u,vc,dir,op){
+  if(op<=0)return '';var a=mp(u-32,vc-27),b=mp(u+32,vc+27),x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]),w=Math.abs(a[0]-b[0]),h=Math.abs(a[1]-b[1]);
+  var t=[mp(u+dir*34,vc-8),mp(u+dir*34,vc+8),mp(u+dir*48,vc)];
+  var c=mp(u,vc);
+  return '<g data-term="polymerase" data-fk="pol'+(vc<0?'t':'b')+'" tabindex="0" role="button" aria-label="ADN polymérase" style="cursor:help" opacity="'+op+'"><rect x="'+r1(x)+'" y="'+r1(y)+'" width="'+r1(w)+'" height="'+r1(h)+'" rx="14" fill="rgba(46,196,182,.3)" stroke="#2ec4b6" stroke-width="2.5"/>'+
+    '<text x="'+r1(c[0])+'" y="'+r1(c[1]+1)+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-size="10" fill="#bff7f0">ADN pol.</text>'+
+    '<path d="M'+t.map(ps).join('L')+'Z" fill="#2ec4b6"/></g>';
+}
+function drawRep(){
+  var o='',ph=SC.phase,dir=LV().dir;
+  if(ph==='helix'||ph==='unzip'){
+    var fr=SC.front,A=42,N=150,rg='';
+    var s1=function(u){var hv=A*Math.sin(KH*u),s=ph==='helix'?0:sm((fr-u)/70);return hv+(-170-hv)*s;};
+    var s2=function(u){var hv=A*Math.sin(KH*u),s=ph==='helix'?0:sm((fr-u)/70);return -hv+(170+hv)*s;};
+    for(var u=-285,j=0;u<=285;u+=15,j++){var s=ph==='helix'?0:sm((fr-u)/70);if(s<.3){var hv=A*Math.sin(KH*u),b=REP_T[j%6];rg+=seg(u,hv,u,0,BC[b],3.5,' opacity="'+(1-s*3)+'"')+seg(u,0,u,-hv,BC[COMP[b]],3.5,' opacity="'+(1-s*3)+'"');}}
+    o+=rg+strandPath(polyV(s1,-290,290,N),OLD,7)+strandPath(polyV(s2,-290,290,N),OLD,7);
+    UB.forEach(function(ub,i){var s=ph==='helix'?0:sm((fr-ub)/70);if(s>.7){var op=Math.min(1,(s-.7)/.3);o+=tabRect(ub,-170,-136,BC[REP_T[i]],op,'#000',false,REP_T[i])+tabRect(ub,136,170,BC[COMP[REP_T[i]]],op,'#000',false,COMP[REP_T[i]]);}});
+    if(SC.helOp>0)o+=helicaseG(ph==='helix'?-300:fr);
+    return o;
+  }
+  var w=SC.wind||0,A2=26,vc1=-105,vc2=105;
+  var fS1=function(u){return lerp(-170,vc1+A2*Math.sin(KH*u),w);},fN1=function(u){return lerp(-88,vc1-A2*Math.sin(KH*u),w);};
+  var fS2=function(u){return lerp(170,vc2+A2*Math.sin(KH*u),w);},fN2=function(u){return lerp(88,vc2-A2*Math.sin(KH*u),w);};
+  var nT=SC.slots.filter(function(s){return s.strand==='t'&&s.done;}).length,nB=SC.slots.filter(function(s){return s.strand==='b'&&s.done;}).length;
+  if(w>.5){for(var uu=-285,jj=0;uu<=285;uu+=15,jj++){var b2=REP_T[jj%6];o+=seg(uu,fS1(uu),uu,(fS1(uu)+fN1(uu))/2,BC[b2],3,' opacity="'+(w-.5)*1.6+'"')+seg(uu,(fS1(uu)+fN1(uu))/2,uu,fN1(uu),BC[COMP[b2]],3,' opacity="'+(w-.5)*1.6+'"');o+=seg(uu,fS2(uu),uu,(fS2(uu)+fN2(uu))/2,BC[COMP[b2]],3,' opacity="'+(w-.5)*1.6+'"')+seg(uu,(fS2(uu)+fN2(uu))/2,uu,fN2(uu),BC[b2],3,' opacity="'+(w-.5)*1.6+'"');}}
+  o+=strandPath(polyV(fS1,-290,290,150),OLD,7)+strandPath(polyV(fS2,-290,290,150),OLD,7);
+  if(ph==='build'){
+    o+=seg(-290,-88,290,-88,'rgba(242,180,65,.18)',3,' stroke-dasharray="4 6"')+seg(-290,88,290,88,'rgba(242,180,65,.18)',3,' stroke-dasharray="4 6"');
+    if(nT)o+=strandPath('M'+ps(mp(UB[0]-30,-88))+'L'+ps(mp(UB[nT-1]+30,-88)),NEW,7);
+    if(nB)o+=strandPath('M'+ps(mp(UB[5-nB+1]-30,88))+'L'+ps(mp(UB[5]+30,88)),NEW,7);
+  }else{o+=strandPath(polyV(fN1,-290,290,150),NEW,7)+strandPath(polyV(fN2,-290,290,150),NEW,7);}
+  var tabOp=ph==='build'?1:Math.max(0,1-w*3);
+  if(tabOp>0){
+    UB.forEach(function(ub,i){o+=tabRect(ub,-170,-136,BC[REP_T[i]],tabOp,'#000',false,REP_T[i])+tabRect(ub,136,170,BC[COMP[REP_T[i]]],tabOp,'#000',false,COMP[REP_T[i]]);});
+    SC.slots.forEach(function(s){
+      var ub=UB[s.i],top=s.strand==='t',v0=top?-122:88,v1=top?-88:122;
+      if(s.done){
+        o+=tabRect(ub,v0,v1,BC[s.nt],tabOp,'#000',false,s.nt);
+        var n=(s.nt==='A'||s.nt==='T')?2:3,vm=top?-129:129;for(var k=0;k<n;k++){var q=mp(ub-8+k*(16/(n-1)),vm);o+='<circle cx="'+r1(q[0])+'" cy="'+r1(q[1])+'" r="2" fill="#f2b441" opacity="'+tabOp+'"/>';}
+      }else if(ph==='build'){
+        var next=(top?SC.cntT:5-SC.cntB)===s.i;
+        o+=tabRect(ub,v0,v1,'rgba(242,180,65,'+(next?.14:.03)+')',1,next?'#f2b441':'rgba(236,230,214,.3)',true,'',' class="'+(next?'next':'')+'" data-nslot="'+s.id+'" data-fk="n'+s.id+'" tabindex="0" role="button" aria-label="Emplacement nucléotide"');
+      }
+    });
+  }
+  if(ph==='build'){
+    o+=polG(SC.pol.t.u,-60,1,SC.pol.t.op)+polG(SC.pol.b.u,60,-1,SC.pol.b.op);
+    if(dir){o+=lab53(-300,-170,'3\'')+lab53(300,-170,'5\'')+lab53(-300,-88,'5\'')+lab53(300,-88,'3\'')+lab53(-300,170,'5\'')+lab53(300,170,'3\'')+lab53(-300,88,'3\'')+lab53(300,88,'5\'');}
+  }
+  if(w>.9){var l1=mp(-280,-150),l2=mp(-280,150);
+    o+='<text x="'+r1(l1[0])+'" y="'+r1(l1[1])+'" font-family="Courier New,monospace" font-size="12" fill="#ffd98a">ADN fille 1 : 1 brin ancien + 1 brin nouveau</text><text x="'+r1(l2[0])+'" y="'+r1(l2[1])+'" font-family="Courier New,monospace" font-size="12" fill="#ffd98a">ADN fille 2 : 1 brin ancien + 1 brin nouveau</text>';}
+  return o;
+}
+
+/* ---------- animation ---------- */
+function tween(ms,fn,e){
+  var tok=RUN;
+  return new Promise(function(res,rej){
+    if(reduce||ms<=0){if(tok!==RUN){rej(CANCEL);return;}fn(1);draw();res();return;}
+    var t0=performance.now();
+    (function f(now){
+      if(tok!==RUN){rej(CANCEL);return;}
+      var k=Math.min(1,(now-t0)/ms);fn(e?e(k):k);draw();
+      if(k<1)requestAnimationFrame(f);else res();
+    })(t0);
+  });
+}
+function mover(items){
+  items.forEach(function(it){it.from={};for(var k in it.to)it.from[k]=it.o[k];});
+  return function(k){items.forEach(function(it){for(var key in it.to)it.o[key]=lerp(it.from[key],it.to[key],k);});};
+}
+function sleep(ms){var tok=RUN;return new Promise(function(res,rej){setTimeout(function(){if(tok!==RUN)rej(CANCEL);else res();},reduce?0:ms);});}
+
+/* ---------- interface : actions, compteur, modale ---------- */
+function actions(list){return new Promise(function(res){ACT={list:list,res:res};renderActions();});}
+function renderActions(){
+  var box=$('#actions');if(!box)return;
+  if(!ACT){box.innerHTML='';return;}
+  box.innerHTML=ACT.list.map(function(b){return '<button type="button" class="btn '+(b.cls||'')+'" data-a="'+b.id+'"'+(b.dis?' disabled':'')+'>'+esc(b.label)+'</button>';}).join('');
+}
+function setDis(id,v){if(!ACT)return;ACT.list.forEach(function(x){if(x.id===id)x.dis=v;});renderActions();}
+function clearActions(){ACT=null;renderActions();}
+function counter(o){
+  var m={cChr:o.chr,cChd:o.chd,cPl:o.pl,cDna:o.dna};
+  for(var k in m){var e=$('#'+k);if(e)e.textContent=m[k];}
+  var n=$('#cNote');if(n)n.textContent=o.note||'';
+}
+function modal(html,btn){
+  return new Promise(function(res){
+    $('#modal').innerHTML='<div class="ov"><div class="modal" role="dialog" aria-modal="true">'+html+'<div class="row"><button class="btn pri" type="button" id="mok">'+esc(btn||'OK')+'</button></div></div></div>';
+    MOK=function(){$('#modal').innerHTML='';MOK=null;res();};var b=$('#mok');if(b)b.focus();
+  });
+}
+function ask(prompt,opts,ans,good,bad,nl){
+  return new Promise(function(res){
+    var wrong=0;fb('q','Question',prompt);
+    var list=opts.map(function(t,i){return {id:'o'+i,label:t,fn:function(){
+      if(i===ans){sfx.ok();fb('good','Exact',good);ACT=null;renderActions();actions([{id:'n',label:nl||'Suite',cls:'pri'}]).then(function(){res(Math.max(0,100-50*wrong));});}
+      else{wrong++;sfx.bad();fb('bad','Pas tout à fait',bad&&bad[i]?bad[i]:'Ce n\'est pas ça. Réfléchis au nombre de centromères et au nombre de chromatides par chromosome.');list[i].dis=true;renderActions();}
+    }};});
+    ACT={list:list,res:null};renderActions();
+  });
+}
+
+/* ---------- navigation ---------- */
+var app=$('#app');
+function go(name,arg){
+  RUN++;clearInterval(tw);ACT=null;DR=null;SC=null;hideTip();$('#modal').innerHTML='';MOK=null;
+  setOri();app.className='';app.innerHTML='';SHOWSC=(name==='play');(SCREENS[name]||SCREENS.title)(arg);window.scrollTo(0,0);
+  var lb=$('#lvbadge');if(lb)lb.textContent=(S.level&&name!=='title')?LV().name+' ('+LV().cls+')':'';
+  updScore();
+}
+function labHtml(){
+  return '<section class="lab"><div class="panel cyc" id="cyc"></div><div class="stagecol"><div class="panel stagewrap" id="swrap"><svg id="stage" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scène de la cellule"></svg><div class="sea" id="sea"></div></div>'+
+    '<div class="counter"><div class="cc"><span>CHROMOSOMES</span><b id="cChr">-</b></div><div class="cc"><span>CHROMATIDES</span><b id="cChd">-</b></div><div class="cc"><span>PLOÏDIE</span><b id="cPl">-</b></div><div class="cc"><span>ADN / CELLULE</span><b id="cDna">-</b></div></div><div class="cnote" id="cNote"></div></div>'+
+    '<div class="panel narr"><div class="speaker">FLEMMING&gt;</div><p id="mtxt"></p></div><div class="fb" id="fb" aria-live="polite"></div><div id="tray"></div><div class="actions" id="actions"></div></section>';
+}
+function startRunner(fn){fn().catch(function(e){if(e!==CANCEL)console.error(e);});}
+function initCell(chr){
+  SC={mode:'cell',cells:[stdCell()],nuc:[],chr:chr,slots:[],spin:0,pu:PX+45,plate:false,links:[],labels:[],h:{},selId:null,rowBad:{}};
+  var sea=$('#sea');if(sea)sea.style.display='none';var tr=$('#tray');if(tr)tr.innerHTML='';draw();
+}
+function tbl(head,rows){return '<table class="tbl"><tr>'+head.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table>';}
+
+/* ---------- placement en métaphase ---------- */
+function slotById(id){for(var i=0;i<SC.slots.length;i++)if(SC.slots[i].id===id)return SC.slots[i];return null;}
+function buildSlots(mode){
+  var s=[];
+  if(mode==='mei2'){[-80,0,80].forEach(function(v,i){s.push({id:'p'+i,kind:'plate',u:0,v:v,occ:null});});return s;}
+  [-150,-90,-30,30,90,150].forEach(function(v,i){s.push({id:'p'+i,kind:'plate',u:0,v:v,occ:null});});
+  [-110,0,110].forEach(function(v,r){s.push({id:'l'+r,kind:'pair',row:r,side:'L',u:-76,v:v,occ:null});s.push({id:'r'+r,kind:'pair',row:r,side:'R',u:76,v:v,occ:null});});
+  return s;
+}
+function freeSlot(c){if(c.slot){var s=slotById(c.slot);if(s)s.occ=null;c.slot=null;}}
+function slotOK(c,s){if(!s)return false;if(s.occ&&s.occ!==c.id)return false;var p=pattern();if(p&&s.kind!==p){var own=c.slot?slotById(c.slot):null;if(!(own&&own.kind===p&&SC.slots.filter(function(x){return x.occ;}).length===1))return false;}return true;}
+function nearestSlot(c){var best=null,bd=75;SC.slots.forEach(function(s){if(!slotOK(c,s))return;var d=Math.hypot(c.u-s.u,c.v-s.v);if(d<bd){bd=d;best=s;}});return best;}
+function allPlaced(){return SC.chr.every(function(c){return c.slot;});}
+function metaChanged(){if(ACT)setDis('ok',!allPlaced());}
+function placeAt(c,s){freeSlot(c);s.occ=c.id;c.slot=s.id;c.sel=false;SC.selId=null;sfx.click();SC.rowBad={};return tween(200,mover([{o:c,to:{u:s.u,v:s.v}}]),ease).then(metaChanged);}
+function sendHome(c){freeSlot(c);c.sel=false;SC.selId=null;metaChanged();return tween(220,mover([{o:c,to:{u:c.home.u,v:c.home.v}}]),ease);}
+function resetMeta(){
+  SC.chr.forEach(function(c){freeSlot(c);c.sel=false;});SC.selId=null;SC.rowBad={};metaChanged();
+  return tween(450,mover(SC.chr.map(function(c){return {o:c,to:{u:c.home.u,v:c.home.v}};})),ease);
+}
+function setupMeta(mode){
+  SC.slots=buildSlots(mode);SC.plate=true;SC.selId=null;
+  SC.h={drag:true,
+    tap:function(k,id){
+      if(k==='chr'){SC.selId=(SC.selId===id?null:id);SC.chr.forEach(function(x){x.sel=(x.id===SC.selId);});sfx.click();draw();}
+      else if(k==='slot'&&SC.selId){var c=K(SC.selId),s=slotById(id);if(c&&slotOK(c,s))placeAt(c,s).catch(noop);else sfx.bad();}
+    },
+    drop:function(c){var s=nearestSlot(c);(s?placeAt(c,s):sendHome(c)).catch(noop);}
+  };
+  draw();
+}
+function stockHomes(chr){
+  var pos=chr.length===6?[[-215,-85],[-215,0],[-215,85],[215,-85],[215,0],[215,85]]:[[-215,-80],[-215,0],[-215,80]];
+  pos=shuffle(pos);chr.forEach(function(c,i){c.home={u:pos[i][0],v:pos[i][1]};});
+}
+function auditMeta(mode){
+  var pat=pattern();
+  if(mode==='mit'){if(pat==='pair')return {death:'mit'};return {ok:true};}
+  if(mode==='mei1'){
+    if(pat==='plate')return {death:'mei1'};
+    var bad=[];[0,1,2].forEach(function(r){var a=K(slotById('l'+r).occ),b=K(slotById('r'+r).occ);if(!a||!b||a.pair!==b.pair)bad.push(r);});
+    if(bad.length)return {rows:bad};return {ok:true};
+  }
+  return {ok:true};
+}
+var DEATH={
+  mit:{t:'Alignement par paires en mitose',h:`Tu as placé les chromosomes par paires, comme en métaphase I de la méiose. Dans une mitose, chaque chromosome se place <b>seul</b> sur la {plaque|plaque}, pour que ses deux chromatides soient attachées aux deux pôles. Avec des paires, des chromosomes entiers seraient tirés vers le même pôle : les cellules filles auraient trop ou pas assez de chromosomes. {Le point de contrôle|controle} détecte ce genre d'erreur ; si elle persiste, la cellule meurt.`},
+  mei1:{t:'Alignement en file unique en méiose I',h:`Tu as aligné les chromosomes en file unique, comme en mitose. En métaphase I, ce sont les chromosomes {homologues|homologues} qui doivent être face à face, de part et d'autre de la {plaque|plaque}, pour être séparés. En file unique, ce sont les chromatides sœurs qui seraient séparées : la cellule resterait diploïde (2n), la méiose n'aurait pas réduit le nombre de chromosomes. {Le point de contrôle|controle} bloquerait la division.`}
+};
+async function cellDeath(kind){
+  sfx.alarm();var w=$('#swrap');if(w){w.classList.remove('dead');void w.offsetWidth;w.classList.add('dead');}
+  var c0=SC.cells[0],it=[{o:c0,to:{ru:RU*.7,rv:RV*.7,op:.45}}];SC.chr.forEach(function(c){it.push({o:c,to:{op:.25}});});
+  await tween(800,mover(it),ease);
+  await modal('<div class="stamp">CELLULE MORTE</div><h2>'+esc(DEATH[kind].t)+'</h2><p>'+rich(DEATH[kind].h)+'</p>','Retenter la métaphase');
+  if(w)w.classList.remove('dead');
+  var it2=[{o:c0,to:{ru:RU,rv:RV,op:1}}];SC.chr.forEach(function(c){it2.push({o:c,to:{op:1}});});
+  await tween(500,mover(it2),ease);
+}
+async function metaStep(mode,hint){
+  var errs=0;setupMeta(mode);
+  var list=[{id:'ok',label:'Confirmer l\'alignement',cls:'pri',dis:true},{id:'rs',label:'Tout retirer',fn:function(){resetMeta().catch(noop);}}];
+  if(!LV().deep)list.push({id:'hint',label:'Indice',fn:function(){fb('q','Indice',hint);}});
+  while(true){
+    list[0].dis=!allPlaced();
+    await actions(list);
+    var r=auditMeta(mode);
+    if(r.death){errs++;await cellDeath(r.death);await resetMeta();continue;}
+    if(r.rows){
+      errs++;sfx.bad();SC.rowBad={};r.rows.forEach(function(x){SC.rowBad[x]=true;});draw();
+      fb('bad','Point de contrôle : anaphase bloquée','Une rangée ne contient pas deux chromosomes {homologues|homologues}. Seuls les chromosomes de même taille, avec le centromère au même endroit (et la même étiquette de numéro, par exemple M1 et P1), forment une paire.');continue;
+    }
+    break;
+  }
+  SC.slots.forEach(function(s){if(!s.occ)s.kind='x';});SC.slots=SC.slots.filter(function(s){return s.occ;});SC.h={};
+  sfx.ok();return errs;
+}
+
+/* ---------- anaphase, télophase, cytocinèse ---------- */
+async function anaphaseSis(random){
+  var nl=[],items=[];
+  SC.chr.forEach(function(c){var p=splitSis(c,random&&Math.random()<.5),a=p[0],b=p[1];nl.push(a,b);
+    items.push({o:a,to:{u:a.pole*PX,v:c.v*.85,vee:1}},{o:b,to:{u:b.pole*PX,v:c.v*.85,vee:1}});});
+  SC.chr=nl;SC.plate=false;SC.h={};
+  await tween(1800,mover(items),ease);
+}
+async function anaphaseHom(){
+  var items=[];SC.chr.forEach(function(c){c.pole=c.u<0?-1:1;items.push({o:c,to:{u:c.pole*PX,v:c.v*.85}});});SC.plate=false;SC.h={};
+  await tween(1800,mover(items),ease);
+}
+function clusterV(n){return n===6?[-125,-75,-25,25,75,125]:(n===3?[-80,0,80]:[-40,40]);}
+async function cytokinesis(rods){
+  SC.nuc=[{u:-175,v:0,ru:105,rv:175,op:0},{u:175,v:0,ru:105,rv:175,op:0}];
+  await tween(700,mover([{o:SC.nuc[0],to:{op:1}},{o:SC.nuc[1],to:{op:1}}]),ease);
+  await tween(1100,mover([{o:SC.cells[0],to:{w:1}}]),ease);
+  SC.cells=[{u:-RU/2,v:0,ru:RU/2*.97,rv:RV*.86,w:0,op:1},{u:RU/2,v:0,ru:RU/2*.97,rv:RV*.86,w:0,op:1}];
+  SC.spin=0;
+  var items=[];
+  [-1,1].forEach(function(pl){
+    var g=SC.chr.filter(function(c){return c.pole===pl;}).sort(function(a,b){return a.v-b.v;}),vs=clusterV(g.length);
+    g.forEach(function(c,i){items.push({o:c,to:{u:pl*168,v:vs[i],vee:0,s:rods?0:SEP}});});
+  });
+  SC.nuc.forEach(function(n,i){items.push({o:n,to:{u:(i?1:-1)*168}});});
+  await tween(900,mover(items),ease);
+}
+
+/* =====================================================================
+   PHASE G1 ET PHASE G2 (choix du type de cellule)
+   ===================================================================== */
+async function stG1(cy){
+  var pts=0,errs=0,T=LV().alleles,first=G().first;
+  setCy({ph:'g1',sub:-1,path:null,n:cy,fec:false});
+  initCell(makeSet(false));
+  var pos=shuffle([[-150,-110],[150,-110],[-150,0],[150,0],[-150,110],[150,110]]);
+  SC.chr.forEach(function(c,i){c.u=pos[i][0];c.v=pos[i][1];c.home={u:c.u,v:c.v};});
+  counter({chr:6,chd:6,pl:'2n = 6',dna:'Q',note:'Pour compter les chromosomes, on compte les centromères (les points clairs).'});
+  draw();
+  if(cy===1){
+    say('Voici une cellule qui vit sa vie : elle est en phase {G1|g1} du cycle cellulaire. Elle est {diploïde|diploide} (2n = 6) : ses six {chromosomes|chromosome} forment trois paires. Dans chaque paire, un chromosome vient de la mère (M, rouge), l\'autre du père (P, bleu). Avant d\'aller plus loin, repère les paires.');
+    await actions([{id:'go',label:'Observer la cellule',cls:'pri'}]);
+    var order=shuffle([1,2,3]);
+    for(var r=0;r<3;r++){
+      var n=order[r],og=Math.random()<.5?'M':'P',tgt=K(og+n),e=0,ok=false;
+      tgt.blink=true;draw();
+      say('Le chromosome '+tgt.id+' clignote. Touche son {homologue|homologues}, celui de la même paire.');
+      fb('q','Repérage '+(r+1)+'/3','Cherche le chromosome qui a la même taille et le centromère au même endroit.');
+      while(!ok){
+        var id=await new Promise(function(res){SC.h={tap:function(k,i){if(k==='chr')res(i);}};draw();});
+        if(id===tgt.id){fb('q','Indice','C\'est celui qui clignote : trouve son partenaire.');continue;}
+        var c=K(id);
+        if(c.pair===tgt.pair)ok=true;
+        else{e++;errs++;sfx.bad();fb('bad','Pas homologues',c.id+' n\'a pas la même taille ni le centromère au même endroit que '+tgt.id+'. '+(T?'Deux homologues portent aussi les mêmes gènes, dans le même ordre.':'Deux homologues se ressemblent par la taille et la forme.'));}
+      }
+      var c2=K((tgt.origin==='M'?'P':'M')+n);
+      pts+=Math.max(25,100-25*e);tgt.blink=false;SC.links.push([tgt.id,c2.id]);sfx.ok();draw();
+      fb('good','Homologues !',T?'M'+n+' et P'+n+' : même taille, même position du centromère, mêmes gènes. Ils portent les mêmes gènes mais pas forcément les mêmes {allèles|allele} (par exemple A et a).':'M'+n+' et P'+n+' : même taille et même position du centromère. L\'un vient de la mère, l\'autre du père.');
+      await sleep(900);
+    }
+    SC.h={};draw();
+    say('6 chromosomes, 3 paires : 2n = 6. En phase G1, chaque chromosome n\'a qu\'une {chromatide|chromatide}, et la quantité d\'ADN de la cellule est {Q|Q}. Mais une cellule ne peut se diviser que si elle a d\'abord copié son ADN : elle va entrer en phase S.');
+    fb('good','Fin de la phase G1','Un chromosome est un seul morceau d\'ADN très enroulé. Il y a 6 chromosomes, donc 6 centromères.');
+    sfx.win();await actions([{id:'n',label:'Entrer en phase S',cls:'pri'}]);
+    award('g1A',pts,errs);
+  }else{
+    say((first==='mit'?'Pendant ce temps, ailleurs dans le même organisme, une autre cellule (dans un testicule ou un ovaire) vit sa vie en phase {G1|g1}.':'Pendant ce temps, ailleurs dans le même organisme, une autre cellule (de la peau, par exemple) vit sa vie en phase {G1|g1}.')+' Elle est elle aussi {diploïde|diploide} (2n = 6), avec les mêmes paires de chromosomes. Avant la phase S, une question de comptage.');
+    var q=await ask('Cette cellule est en phase G1. Que contient-elle ?',['6 chromosomes à 1 chromatide','6 chromosomes à 2 chromatides','12 chromosomes à 1 chromatide'],0,
+      'En G1, l\'ADN n\'a pas encore été copié : 6 chromosomes, chacun avec 1 chromatide (ADN = Q).',
+      [null,'Les chromatides sœurs n\'existent qu\'après la réplication, qui a lieu en phase S, pas encore commencée.','Il y a toujours 6 chromosomes : on compte les centromères. 12 chromatides, ce serait après la phase S.'],'Entrer en phase S');
+    award('g1B',q,q<100?1:0);
+  }
+}
+async function stG2(cy){
+  var g=G(),first=g.first;
+  setCy({ph:'g2',sub:-1,path:null,n:cy,fec:false});
+  var chr=makeSet(true);initCell(chr);inNucleus(chr);SC.nuc=[{u:0,v:0,ru:225,rv:150,op:1}];draw();
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Après la phase S : 6 chromosomes à 2 chromatides = 12 chromatides.'});
+  say(cy===1?'Phase {G2|g2} : l\'ADN est copié (2Q). La cellule vérifie sa copie et fabrique ce qu\'il faut pour se diviser. Mais comment va-t-elle se diviser ? Cela dépend de son type : est-ce une {cellule somatique|somatique} ou une {cellule germinale|germinale} ?'
+    :'Phase {G2|g2} pour cette seconde cellule : son ADN est copié lui aussi (2Q). Ce n\'est pas le même type de cellule que la première : '+(first==='mit'?'l\'option « somatique » est grisée, c\'est donc une cellule germinale.':'l\'option « germinale » est grisée, c\'est donc une cellule somatique.'));
+  fb('q','Quel type de cellule ?','<b>Cellule somatique</b> (peau, muscle, foie...) : elle se divise pour faire grandir l\'organisme ou réparer un tissu. Sa division : la <b>mitose</b>.<br><b>Cellule germinale</b> (testicule ou ovaire) : elle produit les gamètes. Sa division : la <b>méiose</b>.');
+  var list=[{id:'mit',label:'Cellule somatique → mitose',cls:'pri'},{id:'mei',label:'Cellule germinale → méiose',cls:'pri'}];
+  if(cy===2)list.forEach(function(b){if(b.id===first){b.dis=true;b.label+=' (déjà joué)';}});
+  var ch=await actions(list);
+  if(cy===1){g.first=ch;save();}
+  sfx.ok();setCy({path:ch});
+  fb('good',ch==='mit'?'Cellule somatique':'Cellule germinale',ch==='mit'?'Elle va se diviser par mitose : 2 cellules filles identiques entre elles et à la cellule mère.':'Elle va se diviser par méiose : 4 cellules haploïdes (n), qui deviendront des gamètes.');
+  say('Fin de la phase G2. La cellule entre en phase {M|m}.');
+  await actions([{id:'n',label:'Entrer en phase M',cls:'pri'}]);
+}
+
+/* =====================================================================
+   PHASE S : RÉPLICATION
+   ===================================================================== */
+function seaInit(){
+  var sea=$('#sea');if(!sea)return;var h='';
+  var cols=['A','T','C','G'];
+  for(var i=0;i<14;i++){var b=cols[i%4],a=15+Math.random()*70,c=41+Math.random()*18;
+    var l=ORI==='L'?a:c,t=ORI==='L'?c:a;
+    h+='<span style="left:'+l+'%;top:'+t+'%;background:'+BC[b]+';animation-delay:-'+(Math.random()*6).toFixed(1)+'s">'+b+'</span>';}
+  sea.innerHTML=h;
+}
+function trayInit(){
+  var tr=$('#tray');
+  tr.innerHTML='<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%">'+['A','T','C','G'].map(function(b){return '<button type="button" class="nt" data-nt="'+b+'" style="--c:'+BC[b]+'" aria-label="Nucléotide '+b+'">'+b+'</button>';}).join('')+'</div>'+
+    (LV().dir?'':'<div class="pairing">Rappel : A–T et C–G</div>');
+}
+function repSlots(){var s=[];for(var i=0;i<6;i++){s.push({id:'t'+i,strand:'t',i:i,nt:COMP[REP_T[i]],done:false});}for(var j=0;j<6;j++){s.push({id:'b'+j,strand:'b',i:j,nt:REP_T[j],done:false});}return s;}
+var REPSEL=null;
+function repTry(slot,nt){
+  if(!nt){fb('q','Choisis un nucléotide','Touche d\'abord un nucléotide dans la réserve (A, T, C ou G), puis un emplacement.');return;}
+  if(slot.done)return;
+  var top=slot.strand==='t',nextI=top?SC.cntT:5-SC.cntB,key=top?'eT':'eB';
+  if(slot.i!==nextI){
+    SC.errs++;SC[key]++;sfx.bad();
+    fb('bad','Position impossible',LV().dir?
+      'L\'{ADN polymérase|polymerase} ne sait qu\'<b>ajouter</b> un nucléotide à l\'extrémité 3\' du brin nouveau. Elle lit la matrice de 3\' vers 5\' et construit le brin nouveau de 5\' vers 3\', pas à pas. Ici le prochain nucléotide se place à côté de la polymérase (emplacement clignotant).':
+      'La polymérase avance pas à pas le long de la matrice : on ne peut ajouter un nucléotide qu\'à côté de celui qui vient d\'être placé (emplacement clignotant). Les deux polymérases avancent en sens opposés : les deux brins sont orientés en sens opposés.');
+    return;
+  }
+  if(nt!==slot.nt){
+    var tpl=top?REP_T[slot.i]:COMP[REP_T[slot.i]];SC.errs++;SC[key]++;sfx.bad();
+    fb('bad','Mauvaise base','En face de '+tpl+' sur la matrice, il faut '+slot.nt+', pas '+nt+'. {A s\'apparie avec T|compl} (2 liaisons hydrogène), C avec G (3 liaisons hydrogène).');
+    return;
+  }
+  var p=Math.max(10,40-10*SC[key]);SC.pts+=p;SC[key]=0;slot.done=true;if(top)SC.cntT++;else SC.cntB++;sfx.ok();REPSEL=null;$$('.nt').forEach(function(b){b.classList.remove('sel');});
+  fb('good','Liaison créée','+'+p+' points. '+nt+' est complémentaire de '+(top?REP_T[slot.i]:COMP[REP_T[slot.i]])+'.');
+  var pol=top?SC.pol.t:SC.pol.b,cnt=top?SC.cntT:SC.cntB;
+  if(cnt<6){var ni=top?cnt:5-cnt;tween(260,mover([{o:pol,to:{u:UB[ni]}}]),ease).catch(noop);}
+  else tween(400,mover([{o:pol,to:{op:0}}]),ease).catch(noop);
+  draw();
+  if(SC.cntT===6&&SC.cntB===6&&SC.onDone)SC.onDone();
+}
+function randSeq(){
+  var b=['A','T','C','G'],a=[],i,d={};
+  for(i=0;i<6;i++)a.push(b[Math.floor(Math.random()*4)]);
+  a.forEach(function(x){d[x]=1;});
+  return Object.keys(d).length<3?randSeq():a;
+}
+async function stRep(cy){
+  var errsTot=0,pts=0;
+  REP_T=randSeq();
+  setCy({ph:'s',sub:-1,path:null,n:cy,fec:false});
+  SC={mode:'rep',phase:'helix',front:-300,wind:0,helOp:1,pol:{t:{u:-330,op:0},b:{u:330,op:0}},slots:repSlots(),cntT:0,cntB:0,eT:0,eB:0,errs:0,pts:0,h:{},chr:[]};
+  REPSEL=null;
+  var sea=$('#sea');if(sea)sea.style.display='none';var tr0=$('#tray');if(tr0)tr0.innerHTML='';
+  draw();
+  counter({chr:'-',chd:'-',pl:'-',dna:'Q',note:'On zoome sur un petit morceau d\'ADN (6 paires de bases) d\'un seul chromosome.'});
+  say(cy===1?'Phase {S|s} : pour se diviser, la cellule doit d\'abord copier son ADN. L\'{ADN|adn} d\'un chromosome est une double hélice. Pour la copier, la cellule l\'ouvre : c\'est le travail de l\'{hélicase|helicase}. Touche-la pour en savoir plus.'
+    :'Deuxième cycle, nouvelle phase {S|s}. Même si tu l\'as déjà fait, il faut recommencer : une cellule ne peut se diviser, par mitose comme par méiose, qu\'après avoir copié son ADN. Les bases à compléter ne sont pas les mêmes. L\'{hélicase|helicase} ouvre la double hélice.');
+  fb('q','Étape 1','Lance l\'hélicase pour ouvrir la double hélice.');
+  await actions([{id:'go',label:'Lancer l\'hélicase',cls:'pri'}]);
+  SC.phase='unzip';sfx.zip();await tween(2800,function(k){SC.front=-300+620*k;},null);
+  SC.phase='build';SC.helOp=0;SC.h={tap:function(k,id){if(k==='nslot'){var s=SC.slots.filter(function(x){return x.id===id;})[0];repTry(s,REPSEL);}}};
+  if(sea){seaInit();sea.style.display='block';}trayInit();draw();
+  await Promise.all([tween(700,mover([{o:SC.pol.t,to:{u:UB[0],op:1}}]),ease),tween(700,mover([{o:SC.pol.b,to:{u:UB[5],op:1}}]),ease)]);
+  say(LV().dir?'Les deux brins sont séparés : chacun sert de {matrice|matrice}. Une {ADN polymérase|polymerase} s\'installe sur chaque brin. Les brins sont antiparallèles ({5\' → 3\'|sens}) : les polymérases partent donc de deux extrémités opposées.':
+    'Les deux brins sont séparés : chacun sert de {matrice|matrice}. Une {ADN polymérase|polymerase} s\'installe sur chaque brin et ajoute les {nucléotides|nucleotide} complémentaires. Les deux brins vont en sens opposés, donc les polymérases avancent en sens opposés.');
+  fb('q','Étape 2','Choisis un nucléotide (A, T, C, G) puis touche (ou glisse-le sur) l\'emplacement clignotant. Trouve la {base complémentaire|compl} de la matrice.');
+  await new Promise(function(res){SC.onDone=res;});
+  SC.onDone=null;SC.h={};pts=SC.pts;errsTot=SC.errs;
+  var tr=$('#tray');if(tr)tr.innerHTML='';if(sea)sea.style.display='none';
+  sfx.win();SC.phase='done';
+  say('Les deux brins nouveaux sont terminés. Regarde : chaque molécule fille garde un brin ancien (ivoire) et reçoit un brin nouveau (ambre).');
+  await tween(2200,function(k){SC.wind=k;},ease);
+  var q=await ask('Combien de brins anciens contient chaque molécule d\'ADN fille ?',['0','1','2'],1,
+    'Un seul : c\'est la réplication {semi-conservative|semi}. Un brin ancien sert de matrice, un brin nouveau est fabriqué en face.',
+    ['Les deux molécules filles ne peuvent pas être entièrement nouvelles : chaque brin ancien a servi de matrice.',null,'Il y a deux brins anciens au total, mais ils sont répartis : un dans chaque molécule fille.']);
+  pts+=q;
+  initCell(makeSet(false));
+  var pos=[[-150,-110],[150,-110],[-150,0],[150,0],[-150,110],[150,110]];SC.chr.forEach(function(c,i){c.u=pos[i][0];c.v=pos[i][1];});
+  counter({chr:6,chd:6,pl:'2n',dna:'Q',note:'Avant la réplication : chaque chromosome a 1 chromatide.'});draw();
+  say('Cette copie a lieu sur tout l\'ADN de chaque chromosome. Regarde le résultat.');
+  fb('q','Zoom arrière','On revient à l\'échelle des chromosomes.');await sleep(1200);
+  sfx.zip();
+  SC.chr.forEach(function(c){c.ch.push(cloneChd(c.ch[0],-1));});
+  await tween(1800,mover(SC.chr.map(function(c){return {o:c,to:{s:SEP}};})),ease);
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Après la réplication : 6 chromosomes à 2 chromatides = 12 chromatides.'});
+  say('Chaque chromosome est maintenant formé de deux {chromatides|chromatide} identiques, reliées par le {centromère|centromere}. Attention : il y a toujours 6 chromosomes, mais 12 chromatides, et la quantité d\'ADN a doublé ({2Q|Q}).');
+  fb('good','Phase S terminée','Une chromatide = une molécule d\'ADN. Avant : 6 molécules d\'ADN. Après : 12.');
+  sfx.win();
+  await recap('Phase S : la réplication',tbl(['','Avant (G1)','Après (fin de S)'],[['Chromosomes','6','6'],['Chromatides par chromosome','1','2'],['Chromatides en tout','6','12'],['ADN','Q','2Q']]),
+    'Chez l\'humain, la réplication de tout le génome dure quelques heures, avec des milliers de fourches de réplication ouvertes en même temps. Dans le jeu, une seule est représentée.',pts,580,errsTot);
+  award(cy===1?'sA':'sB',pts,errsTot);
+}
+
+/* =====================================================================
+   PHASE M : MITOSE
+   ===================================================================== */
+function inNucleus(chr){var p=[[-135,-65],[0,-65],[135,-65],[-135,65],[0,65],[135,65]];shuffle(p).forEach(function(q,i){chr[i].u=q[0];chr[i].v=q[1];});}
+async function stMit(cy){
+  var pts=0,errs=0;
+  setCy({ph:'m',sub:0,path:'mit',n:cy,fec:false});
+  var chr=makeSet(true);initCell(chr);inNucleus(chr);stockHomes(chr);
+  SC.nuc=[{u:0,v:0,ru:225,rv:150,op:1}];draw();
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Cellule après la réplication.'});
+  say('Phase M, par {mitose|mitose}. Objectif : 2 cellules filles strictement identiques à la cellule mère (2n = 6), pour faire grandir l\'organisme ou réparer un tissu. La cellule est en {prophase|prophase} : les chromosomes sont condensés, chacun formé de 2 chromatides.');
+  fb('q','Objectif','2 cellules filles identiques, 2n = 6.');
+  await actions([{id:'go',label:'Enveloppe nucléaire et fuseau',cls:'pri'}]);
+  var it=[{o:SC.nuc[0],to:{op:0}}];SC.chr.forEach(function(c){it.push({o:c,to:{u:c.home.u,v:c.home.v}});});
+  SC.spin=.01;it.push({o:SC,to:{spin:.35}});
+  await tween(1200,mover(it),ease);
+  setCy({sub:1});
+  say('{Métaphase|metaphase} : l\'enveloppe du noyau a disparu et le {fuseau|fuseau} est en place. Place les chromosomes sur la {plaque équatoriale|plaque}, puis confirme. Touche un chromosome puis un emplacement, ou glisse-le.');
+  fb('q','Alignement','Un mauvais alignement peut tuer la cellule. Réfléchis : comment doivent être attachés les chromosomes pour que chaque cellule fille reçoive une chromatide de chacun ?');
+  var e=await metaStep('mit','En mitose, chaque chromosome se place seul sur la plaque (un seul fichier). Les paires de chromosomes homologues, c\'est pour la méiose.');
+  errs+=e;pts+=Math.max(100,300-100*e);
+  await tween(700,mover([{o:SC,to:{spin:1}}]),ease);
+  fb('good','Alignement validé','Chaque chromosome est attaché aux deux pôles : {le point de contrôle|controle} autorise l\'anaphase.');
+  setCy({sub:2});
+  say(LV().deep?'{Anaphase|anaphase} : la {séparase|separase} coupe les cohésines qui collent les chromatides sœurs. Les fibres du fuseau tirent chaque chromatide vers un pôle.':'{Anaphase|anaphase} : les deux chromatides de chaque chromosome se séparent. Les fibres du fuseau tirent chacune vers un pôle opposé.');
+  await actions([{id:'go',label:'Lancer l\'anaphase',cls:'pri'}]);
+  await anaphaseSis(false);
+  counter({chr:12,chd:12,pl:'2n',dna:'2Q',note:'La cellule n\'est pas encore divisée : ses 12 chromosomes forment deux lots de 6.'});
+  var q1=await ask('Combien de chromosomes la cellule compte-t-elle maintenant ?',['6','12','24'],1,
+    'Chaque chromatide est devenue un chromosome (un centromère = un chromosome). 12 chromosomes à 1 chromatide : 6 à chaque pôle.',
+    ['Il y en avait 6 avant, mais chaque chromosome a été coupé en deux : compte les centromères.',null,'Non : il y a 12 chromatides, qui sont maintenant 12 chromosomes à une chromatide.']);
+  pts+=q1;
+  setCy({sub:3});
+  say('{Télophase|telophase} et {cytocinèse|cytocinese} : une enveloppe nucléaire se reforme autour de chaque lot de chromosomes, et le cytoplasme se divise.');
+  await cytokinesis(true);
+  counter({chr:6,chd:6,pl:'2n',dna:'Q',note:'Par cellule fille : 6 chromosomes à 1 chromatide.'});
+  fb('good','Deux cellules identiques','Chaque cellule fille a reçu une chromatide de chaque chromosome : même information génétique que la cellule mère, 2n = 6.');
+  setCy({ph:'g1',sub:-1,path:null});
+  say('La mitose est terminée : 2 cellules filles, 2n = 6, identiques à la cellule mère. Chacune entre dans la phase G1 d\'un nouveau cycle.');
+  sfx.win();
+  await recap('La mitose',tbl(['','Cellule mère (après réplication)','Cellule fille'],[['Chromosomes','6','6'],['Chromatides par chromosome','2','1'],['ADN','2Q','Q'],['Ploïdie','2n','2n'],['Information génétique','-','identique à la mère']]),
+    'Une cellule de peau humaine se divise ainsi en moyenne toutes les quelques semaines : la mitose renouvelle sans cesse l\'épiderme. Le même mécanisme assure la croissance de l\'organisme.',pts,400,errs);
+  award(cy===1?'mA':'mB',pts,errs);
+}
+
+/* =====================================================================
+   PHASE M : MÉIOSE
+   ===================================================================== */
+function crossover(a,b){var t=a.o[1],al=a.al[1];a.o[1]=b.o[1];a.al[1]=b.al[1];b.o[1]=t;b.al[1]=al;}
+function rodChromo(pair,chd,origin){
+  var pr=DATA.pairs[pair-1],p=pr.len*pr.tc,q=pr.len-p;
+  return {id:'r'+Math.random().toString(36).slice(2,7),pair:pair,origin:origin||chd.o[0],ch:[chd],u:(p-q)/2,v:0,s:0,vee:0,d:1,pole:0,sel:false,blink:false,op:1,slot:null,home:null,label:false};
+}
+function randomGamete(){
+  var g=[];[1,2,3].forEach(function(n){var m=mkChromo(n,'M'),p=mkChromo(n,'P'),a=cloneChd(m.ch[0],1),b=cloneChd(m.ch[0],-1),c=cloneChd(p.ch[0],1),d=cloneChd(p.ch[0],-1);
+    if(LV().crossing&&Math.random()<.6)crossover(a,c);var pick=[a,b,c,d][Math.floor(Math.random()*4)];g.push({pair:n,ch:pick});});return g;
+}
+async function tetStep(){
+  var done=0,errs=0,pts=0;
+  var set=makeSet(true);SC={mode:'tet',bv:[],h:{},chr:[],cells:[],nuc:[],slots:[]};
+  [1,2,3].forEach(function(n){
+    var M=set.filter(function(c){return c.id==='M'+n;})[0],P=set.filter(function(c){return c.id==='P'+n;})[0],vg=[-150,0,150][n-1];
+    var rods=[M.ch[0],M.ch[1],P.ch[0],P.ch[1]].map(function(ch,k){var c=rodChromo(n,ch,k<2?'M':'P');c.id='b'+n+'_'+k;c.u=0;c.v=vg+[-54,-18,18,54][k];c.label=(k%2===0);c.origin=k<2?'M':'P';return c;});
+    SC.bv.push({pair:n,rods:rods,done:null,M:M,P:P});
+  });
+  SC.sel=null;SC.set=set;
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Vue agrandie : chaque paire de chromosomes homologues est un bivalent de 4 chromatides.'});
+  say('{Prophase I|prophase} : les chromosomes {homologues|homologues} s\'apparient et forment des {bivalents|bivalent}. Provoque un {enjambement|crossing} : touche une chromatide du chromosome rouge (M), puis une chromatide du chromosome bleu (P). Deux chromatides sœurs sont reliées par un trait.');
+  fb('q','Objectif','Fais au moins un enjambement (un par bivalent au maximum). Tu peux en faire trois.');
+  SC.h={tap:function(k,id){
+    if(k!=='chr')return;var m=/^b(\d)_(\d)$/.exec(id);if(!m)return;var bi=+m[1]-1,rk=+m[2],bv=SC.bv[bi];
+    if(bv.done){fb('bad','Déjà fait','Ce bivalent a déjà un chiasma. Choisis une autre paire.');return;}
+    if(!SC.sel){SC.sel={bi:bi,k:rk};bv.rods[rk].sel=true;sfx.click();draw();return;}
+    if(SC.sel.bi!==bi){bv.rods.forEach(function(r){r.sel=false;});SC.bv[SC.sel.bi].rods[SC.sel.k].sel=false;SC.sel={bi:bi,k:rk};bv.rods[rk].sel=true;draw();return;}
+    var a=SC.sel.k;if(a===rk){bv.rods[rk].sel=false;SC.sel=null;draw();return;}
+    var sameHom=(a<2)===(rk<2);
+    if(sameHom){errs++;sfx.bad();fb('bad','Chromatides sœurs',(a<2===(rk<2)&&(a>>1===rk>>1)?'Ces deux chromatides sont des chromatides sœurs (identiques) : ':'')+'un échange entre chromatides d\'un même chromosome ne changerait rien. Choisis une chromatide de l\'<b>autre</b> chromosome homologue.');return;}
+    var x=bv.rods[a].ch[0],y=bv.rods[rk].ch[0];crossover(x,y);bv.done=[Math.min(a,rk),Math.max(a,rk)];bv.rods.forEach(function(r){r.sel=false;});SC.sel=null;done++;pts+=50;sfx.ok();draw();
+    fb('good','Chiasma !','Les deux chromatides ont échangé leurs extrémités : elles portent maintenant des combinaisons d\'allèles qui n\'existaient pas chez les parents : <b>'+x.al.join('')+'</b> et <b>'+y.al.join('')+'</b>. C\'est le brassage intrachromosomique.');
+    setDis('ok',false);
+  }};
+  draw();
+  await actions([{id:'ok',label:'Terminer la prophase I',cls:'pri',dis:true}]);
+  return {pts:pts,errs:errs,set:SC.set};
+}
+async function stMei(cy){
+  var pts=0,errs=0,T=LV().crossing,set;
+  setCy({ph:'m',sub:0,path:'mei',n:cy,fec:false});
+  say('Phase M, par {méiose|meiose}. Objectif : obtenir 4 cellules {haploïdes|haploide} (n = 3), futurs gamètes, à partir d\'une cellule 2n = 6. La méiose comporte deux divisions qui se suivent, avec une seule réplication de l\'ADN : celle de la phase S que tu viens de faire.');
+  SC={mode:'cell',cells:[stdCell()],nuc:[],chr:[],slots:[],spin:0,pu:PX+45,plate:false,links:[],labels:[],h:{},selId:null,rowBad:{}};
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Cellule après la réplication.'});
+  fb('q','Objectif','4 cellules haploïdes (n = 3).');
+  var sea=$('#sea');if(sea)sea.style.display='none';
+  await actions([{id:'go',label:'Commencer la méiose',cls:'pri'}]);
+  if(T){var t=await tetStep();pts+=t.pts;errs+=t.errs;set=t.set;}
+  else{set=makeSet(true);}
+  var chr=set;initCell(chr);inNucleus(chr);stockHomes(chr);SC.nuc=[{u:0,v:0,ru:225,rv:150,op:1}];draw();
+  if(!T){say('{Prophase I|prophase} : les chromosomes {homologues|homologues} s\'apparient deux par deux, au centre du noyau.');fb('q','Prophase I','Chaque chromosome est déjà formé de 2 chromatides sœurs (la réplication a eu lieu).');await actions([{id:'go',label:'Suite',cls:'pri'}]);}
+  counter({chr:6,chd:12,pl:'2n',dna:'2Q',note:'Cellule après la réplication.'});
+  var it=[{o:SC.nuc[0],to:{op:0}}];SC.chr.forEach(function(c){it.push({o:c,to:{u:c.home.u,v:c.home.v}});});SC.spin=.01;it.push({o:SC,to:{spin:.35}});
+  await tween(1200,mover(it),ease);
+  setCy({sub:1});
+  say('{Métaphase I|metaphase} : place les chromosomes homologues <b>par paires</b>, de part et d\'autre de la {plaque|plaque}.'+(T?' L\'orientation de chaque paire (rouge à gauche ou à droite) est aléatoire : c\'est le {brassage interchromosomique|brassage}.':''));
+  fb('q','Alignement','Un homologue de chaque côté de la plaque, rangée par rangée. Mais attention : mauvaise disposition, cellule en danger.');
+  var e=await metaStep('mei1','En méiose I, les chromosomes homologues se placent par paires, de part et d\'autre de la plaque. Chaque rangée contient deux homologues (par exemple M1 et P1).');
+  errs+=e;pts+=Math.max(100,300-100*e);
+  await tween(700,mover([{o:SC,to:{spin:1}}]),ease);
+  fb('good','Alignement validé','Chaque homologue est attaché à un pôle différent : l\'anaphase I peut commencer.');
+  setCy({sub:2});
+  say('{Anaphase I|anaphase} : ce sont les chromosomes entiers (les homologues) qui sont séparés. Les chromatides sœurs restent attachées l\'une à l\'autre.');
+  await actions([{id:'go',label:'Lancer l\'anaphase I',cls:'pri'}]);
+  await anaphaseHom();
+  setCy({sub:3});
+  say('{Télophase I|telophase} et cytocinèse : deux cellules se forment, chacune avec un seul chromosome de chaque paire.');
+  await cytokinesis(false);
+  counter({chr:3,chd:6,pl:'n',dna:'Q',note:'Par cellule fille : 3 chromosomes à 2 chromatides.'});
+  fb('good','Fin de la méiose I','La cellule est passée de 2n = 6 à n = 3 chromosomes. Mais chaque chromosome a encore 2 chromatides : la quantité d\'ADN par cellule est Q.');
+  var cellA=SC.chr.filter(function(c){return c.pole===-1;}),cellB=SC.chr.filter(function(c){return c.pole===1;});
+  var q1=await ask('Avant la 2e division, la cellule doit-elle répliquer son ADN ?',['Oui, comme avant la mitose','Non, il n\'y a pas de nouvelle réplication'],1,
+    'Il n\'y a qu\'une réplication par méiose, avant la méiose I. Les chromatides sœurs qui vont se séparer sont celles de la réplication initiale. Sur le cycle, aucune phase S entre les deux divisions.',
+    ['Non : une seule réplication a lieu, avant la méiose I. Sinon, les gamètes auraient trop d\'ADN.']);
+  pts+=q1;
+  var A=SC.cells[0],B=SC.cells[1],homes=[[-215,-80],[-215,0],[-215,80]],items=[{o:A,to:{u:0,ru:RU,rv:RV}},{o:B,to:{op:0}}];
+  cellA.forEach(function(c,i){c.home={u:homes[i][0],v:homes[i][1]};items.push({o:c,to:{u:homes[i][0],v:homes[i][1]}});});
+  cellB.forEach(function(c){items.push({o:c,to:{op:0}});});SC.nuc.forEach(function(n){items.push({o:n,to:{op:0}});});
+  setCy({sub:4});
+  say('{Prophase II|prophase} : on suit une seule des deux cellules ; l\'autre fait exactement la même chose en parallèle.');
+  await tween(1100,mover(items),ease);
+  SC.cells=[A];SC.chr=cellA;SC.nuc=[];SC.spin=.35;SC.slots=[];
+  counter({chr:3,chd:6,pl:'n',dna:'Q',note:'La cellule suivie : 3 chromosomes à 2 chromatides.'});
+  setCy({sub:5});
+  say('{Métaphase II|metaphase} : comme en mitose, les chromosomes se placent <b>en file unique</b> sur la plaque.');
+  fb('q','Alignement II','Place les 3 chromosomes sur la plaque, puis confirme.');
+  await metaStep('mei2','En file unique : un seul chromosome par emplacement, tous centrés sur la plaque.');
+  await tween(500,mover([{o:SC,to:{spin:1}}]),ease);
+  setCy({sub:6});
+  say(T?'{Anaphase II|anaphase} : les chromatides sœurs se séparent. Comme elles ne sont plus identiques (à cause de l\'enjambement), chaque gamète sera génétiquement unique.':'{Anaphase II|anaphase} : cette fois, ce sont les chromatides sœurs qui se séparent.');
+  await actions([{id:'go',label:'Lancer l\'anaphase II',cls:'pri'}]);
+  await anaphaseSis(true);
+  setCy({sub:7});
+  await cytokinesis(true);
+  counter({chr:3,chd:3,pl:'n',dna:'Q/2',note:'Par gamète : 3 chromosomes à 1 chromatide.'});
+  var gA=[[],[]];SC.chr.forEach(function(c){gA[c.pole===-1?0:1].push({pair:c.pair,ch:c.ch[0],origin:c.origin});});
+  var gB=[[],[]];cellB.forEach(function(c){var f=Math.random()<.5?0:1;gB[0].push({pair:c.pair,ch:c.ch[f],origin:c.origin});gB[1].push({pair:c.pair,ch:c.ch[1-f],origin:c.origin});});
+  var gam=[gA[0],gA[1],gB[0],gB[1]].map(function(g){return g.sort(function(a,b){return a.pair-b.pair;});});
+  LAST=gam;
+  var q2=await ask('Combien de chromosomes et de chromatides compte chaque gamète ?',['3 chromosomes à 1 chromatide','6 chromosomes à 1 chromatide','3 chromosomes à 2 chromatides'],0,
+    'Chaque gamète a un chromosome de chaque paire (n = 3), avec une seule chromatide : sa quantité d\'ADN est Q/2.',
+    ['Il y a bien 3 chromosomes en tout, mais ils n\'ont plus qu\'une chromatide : les chromatides sœurs se sont séparées en anaphase II.','Un gamète est haploïde : il n\'a qu\'un chromosome de chaque paire, donc 3 au total.'],'Voir les 4 gamètes');
+  pts+=q2;
+  setCy({ph:'g1',sub:-1,path:null});
+  say('La méiose est terminée : 4 cellules haploïdes, n = 3, prêtes à devenir des gamètes.');
+  sfx.win();
+  await recap('La méiose',tbl(['','Après réplication','Après méiose I (par cellule)','Gamète (après méiose II)'],[['Chromosomes','6','3','3'],['Chromatides par chromosome','2','2','1'],['ADN','2Q','Q','Q/2'],['Ploïdie','2n','n','n']])+gametesHtml(gam),
+    T?'Avec 3 paires de chromosomes, le brassage interchromosomique seul donne déjà 8 types de gamètes. Chez l\'humain (23 paires), cela fait plus de 8 millions de combinaisons, avant même de compter les enjambements.':'Chez l\'humain (2n = 46), les gamètes ont 23 chromosomes. À la fécondation, deux gamètes fusionnent et rétablissent 46 chromosomes.',pts,T?650:500,errs);
+  award(cy===1?'mA':'mB',pts,errs);
+}
+function gametesHtml(gam){
+  var al=LV().alleles,h='<div class="gams">';
+  gam.forEach(function(g,i){
+    var svg='<svg viewBox="-100 -64 200 128" role="img" aria-label="Gamète '+(i+1)+'">';
+    g.forEach(function(r,j){var c=rodChromo(r.pair,r.ch,r.ch.o[0]);c.v=[-40,0,40][j];svg+=chromSVG(c,mapL,{alleles:al,label:false});});
+    svg+='</svg>';
+    var txt=al?g.map(function(r){return r.ch.al.join('');}).join(' · '):'';
+    h+='<div class="gam">'+svg+'<div class="gt">Gamète '+(i+1)+' (n = 3)'+(txt?'<br>'+txt:'')+'</div></div>';
+  });
+  return h+'</div>'+(al?'<p class="small dim">Chaque gamète porte un chromosome de chaque paire. Les lettres indiquent les allèles : un chromosome peut combiner des morceaux rouges et bleus à cause de l\'enjambement.</p>':'');
+}
+
+/* =====================================================================
+   FÉCONDATION
+   ===================================================================== */
+async function stFec(){
+  var pts=0;
+  var mine=LAST?LAST[Math.floor(Math.random()*LAST.length)]:randomGamete();
+  setCy({fec:true,ph:'g1',sub:-1,path:null,n:0});
+  var partner=[1,2,3].map(function(n){return {pair:n,ch:{o:['X','X'],al:['',''],sg:1}};});
+  var C=[];
+  mine.forEach(function(r,i){var c=rodChromo(r.pair,r.ch,r.ch.o[0]);c.id='g'+r.pair;c.label=false;c.u=-185+c.u;c.v=[-60,0,60][i];C.push(c);});
+  partner.forEach(function(r,i){var c=rodChromo(r.pair,r.ch,'X');c.id='x'+r.pair;c.label=false;c.u=185+c.u;c.v=[-60,0,60][i];C.push(c);});
+  initCell(C);
+  SC.cells=[{u:-185,v:0,ru:150,rv:150,w:0,op:1},{u:185,v:0,ru:150,rv:150,w:0,op:1}];
+  SC.labels=[{u:-185,v:175,t:'un gamète issu de la méiose'},{u:185,v:175,t:'gamète de l\'autre parent'}];SC.h={};draw();
+  counter({chr:'3 + 3',chd:'3 + 3',pl:'n + n',dna:'Q/2 + Q/2',note:'Deux gamètes haploïdes, avant fusion.'});
+  say('Dernier acte. Un {gamète|gamete} issu de ta méiose rencontre un gamète de l\'autre parent (chromosomes en ivoire). Ils fusionnent : c\'est la fécondation, qui forme un {zygote|zygote}.');
+  fb('q','Prédiction','Avant de lancer la fusion, calcule.');
+  var q=await ask('Combien de chromosomes aura le zygote ?',['3','6','12'],1,'3 + 3 = 6 : le zygote est diploïde, 2n = 6. Il a deux chromosomes de chaque paire : un de chaque parent.',
+    ['Un seul gamète a 3 chromosomes, mais le zygote réunit deux gamètes : 3 + 3.',null,'Les gamètes sont haploïdes : 3 + 3 = 6, pas 12.']);
+  pts+=q;
+  await actions([{id:'go',label:'Fusionner les gamètes',cls:'pri'}]);
+  var it=[{o:SC.cells[0],to:{u:0,ru:210,rv:200}},{o:SC.cells[1],to:{u:0,ru:210,rv:200,op:0}}];
+  SC.labels=[];
+  var rows=[-100,0,100];
+  SC.chr.forEach(function(c){var mineSide=c.id.charAt(0)==='g',row=rows[c.pair-1];var pr=DATA.pairs[c.pair-1],p=pr.len*pr.tc,q2=pr.len-p;
+    it.push({o:c,to:{u:(mineSide?-85:85)+(p-q2)/2,v:row}});});
+  await tween(1600,mover(it),ease);SC.cells=[SC.cells[0]];
+  setCy({fec:false,ph:'g1',sub:-1,path:null,n:0});
+  counter({chr:6,chd:6,pl:'2n',dna:'Q',note:'Zygote : 3 paires de chromosomes homologues, chacune formée d\'un chromosome de chaque parent.'});
+  sfx.win();
+  say('Le zygote a retrouvé 2n = 6 : trois paires de chromosomes homologues, chacune avec un chromosome de chaque parent. Méiose et fécondation se compensent : le nombre de chromosomes reste le même de génération en génération. Le zygote entre en phase G1 : un nouveau cycle commence, et il se divisera par mitose pour construire un organisme.');
+  fb('good','Cycle bouclé','Méiose : 2n → n. Fécondation : n + n → 2n. '+(LV().alleles?'Le gamète rencontré est aussi un hasard : une source de diversité de plus.':''));
+  await recap('La fécondation',tbl(['','Gamète','Zygote'],[['Chromosomes','3','6'],['Chromatides par chromosome','1','1'],['ADN','Q/2','Q'],['Ploïdie','n','2n']]),
+    'Le zygote se divise ensuite par mitose, encore et encore : toutes les cellules du futur organisme dérivent de cette cellule unique, et ont donc la même information génétique.',pts,100,0);
+  award('fec',pts,0);
+}
+
+/* =====================================================================
+   CYCLE CELLULAIRE : le « menu » de l'histoire (information, pas navigation)
+   ===================================================================== */
+var CY={ph:'g1',sub:-1,path:null,n:1,fec:false};
+var PH=['g1','s','g2','m'],FR={g1:.36,s:.22,g2:.14,m:.28},PLAB={g1:'G1',s:'S',g2:'G2',m:'M'};
+var PNAME={g1:'Phase G1 · croissance',s:'Phase S · copie de l\'ADN',g2:'Phase G2 · préparation',m:'Phase M · division'};
+var PDESC={g1:'La cellule grandit et fonctionne. Chaque chromosome a 1 chromatide : ADN = Q.',s:'L\'ADN est copié : chaque chromosome passe à 2 chromatides. ADN = 2Q.',g2:'La cellule vérifie la copie et se prépare. Les chromosomes ont 2 chromatides.'};
+var SUBN={mit:['Prophase','Métaphase','Anaphase','Télophase'],mei:['Prophase I','Métaphase I','Anaphase I','Télophase I','Prophase II','Métaphase II','Anaphase II','Télophase II']};
+var SUBK=['prophase','metaphase','anaphase','telophase'];
+function setCy(o){for(var k in o)CY[k]=o[k];renderCy();}
+function polar(a,r,c){c=c||80;return [c+r*Math.cos(a),c+r*Math.sin(a)];}
+function arcD(a0,a1,r,c){var p=polar(a0,r,c),q=polar(a1,r,c);return 'M'+r1(p[0])+' '+r1(p[1])+'A'+r+' '+r+' 0 '+((a1-a0)>Math.PI?1:0)+' 1 '+r1(q[0])+' '+r1(q[1]);}
+function ringSvg(){
+  var tot=2*Math.PI,a=-Math.PI/2,gap=.07,cur=CY.fec?-1:PH.indexOf(CY.ph);
+  var o='<svg viewBox="0 0 160 160" role="img" aria-label="Cycle cellulaire : '+(CY.fec?'fécondation':'phase '+PLAB[CY.ph]+' en cours')+'">';
+  PH.forEach(function(k,i){
+    var a0=a+gap/2,a1=a+FR[k]*tot-gap/2;a+=FR[k]*tot;
+    var mid=(a0+a1)/2;
+    var parts=(k==='m'&&CY.path==='mei')?[{a0:a0,a1:mid-.025,l:'I',h:1},{a0:mid+.025,a1:a1,l:'II',h:2}]:[{a0:a0,a1:a1,l:PLAB[k],h:0}];
+    parts.forEach(function(p){
+      var st='';
+      if(cur>=0){
+        if(i<cur)st='done';
+        else if(i===cur){st='on';if(p.h){var hh=CY.sub>=4?2:1;st=p.h<hh?'done':(p.h===hh?'on':'');}}
+      }
+      var term=k==='m'?(CY.path==='mei'?'m_mei':(CY.path==='mit'?'m_mit':'m')):k;
+      var tp=polar((p.a0+p.a1)/2,60);
+      o+='<path class="arc '+st+'" d="'+arcD(p.a0,p.a1,60)+'" data-term="'+term+'" tabindex="0" role="button" aria-label="'+esc(PNAME[k])+'"/>';
+      o+='<text x="'+r1(tp[0])+'" y="'+r1(tp[1])+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-weight="700" font-size="'+(p.h?8:10)+'" fill="'+(st==='on'?'#150e00':'#ece6d6')+'" pointer-events="none">'+p.l+'</text>';
+    });
+  });
+  var big=CY.fec?'2n':(CY.ph==='m'&&CY.path==='mei'?(CY.sub>=4?'M II':'M I'):PLAB[CY.ph]);
+  var small=CY.fec?'fécondation':(CY.n>0?'cycle '+CY.n+' / 2':'nouveau cycle');
+  o+='<text x="80" y="77" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="700" font-size="25" fill="#ffd98a">'+big+'</text><text x="80" y="97" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="#9a937c">'+small+'</text></svg>';
+  return o;
+}
+function renderCy(){
+  var el=$('#cyc');if(!el)return;
+  var ph=CY.ph,name,desc;
+  if(CY.fec){name='Fécondation';desc='Deux gamètes (n) fusionnent : le zygote est diploïde (2n).';}
+  else if(ph==='m'||CY.path){name=PNAME.m;desc=CY.path==='mit'?'Mitose : 1 division, 2 cellules filles identiques (2n).':(CY.path==='mei'?'Méiose : 2 divisions successives, 4 cellules haploïdes (n).':'La division de la cellule. Sa nature dépend du type de cellule.');}
+  else{name=PNAME[ph];desc=PDESC[ph];}
+  if(!CY.fec&&CY.path&&ph!=='m'){name=PNAME[ph];desc=PDESC[ph];}
+  var chips='';
+  if(!CY.fec&&ph==='m'&&CY.path){
+    chips='<div class="chips">'+SUBN[CY.path].map(function(t,i){
+      var cls=i===CY.sub?'on':(i<CY.sub?'done':'');
+      var pre=(CY.path==='mei'&&i===4)?'<span class="chip nos">pas de phase S</span>':'';
+      return pre+'<button type="button" class="chip '+cls+'" data-term="'+SUBK[i%4]+'">'+t+'</button>';
+    }).join('')+'</div>';
+  }
+  el.innerHTML=ringSvg()+'<div class="cyc-i"><div class="cyc-n">'+esc(name)+'</div><div class="cyc-d">'+esc(desc)+'</div>'+chips+'<div class="cyc-h">Touche une phase pour la définir.</div></div>';
+}
+
+/* =====================================================================
+   FIL DE L'HISTOIRE
+   ===================================================================== */
+var STAGES=['g1A','sA','g2A','mA','g1B','sB','g2B','mB','fec','quiz','end'];
+function other(p){return p==='mit'?'mei':'mit';}
+function award(k,pts,errs){var g=G();g.sc[k]=pts;g.er[k]=errs||0;save();updScore();}
+var SHOWSC=false;
+function updScore(){var b=$('#scbadge');if(b)b.textContent=SHOWSC&&S.level?'Score '+totalScore():'';}
+function stM(cy){var g=G(),p=cy===1?g.first:other(g.first);return p==='mit'?stMit(cy):stMei(cy);}
+var ST={
+  g1A:function(){return stG1(1);},sA:function(){return stRep(1);},g2A:function(){return stG2(1);},mA:function(){return stM(1);},
+  g1B:function(){return stG1(2);},sB:function(){return stRep(2);},g2B:function(){return stG2(2);},mB:function(){return stM(2);},
+  fec:function(){return stFec();},quiz:function(){return stQuiz();},end:function(){return stEnd();}
+};
+async function story(){
+  var g=G(),i=STAGES.indexOf(g.stage);if(i<0)i=0;
+  for(;i<STAGES.length;i++){
+    g.stage=STAGES[i];save();
+    await ST[STAGES[i]]();
+  }
+}
+function recap(title,html,dyk,pts,mx,errs){
+  return modal('<div class="tag">À retenir</div><h2>'+esc(title)+'</h2>'+html+(dyk?'<div class="callout"><b>Le savais-tu ?</b> '+esc(dyk)+'</div>':'')+
+    '<div class="row2"><span class="big">+'+pts+' / '+mx+'</span><span class="dim">'+errs+' erreur'+(errs>1?'s':'')+'</span></div>','Continuer');
+}
+function stQuiz(){
+  return new Promise(function(resolve){
+    SC=null;var list=shuffle(quizList()),i=0,pts=0,errs=0;
+    function show(){
+      var q=list[i],ord=shuffle(q.o.map(function(_,k){return k;}));
+      app.innerHTML='<section class="panel"><div class="tag">Test final · question '+(i+1)+'/'+list.length+'</div><h2 style="font-size:1.15rem;margin-bottom:12px">'+esc(q.q)+'</h2><div class="row2" id="opts">'+
+        ord.map(function(j){return '<button class="btn" type="button" data-q="'+j+'">'+esc(q.o[j])+'</button>';}).join('')+'</div><div class="fb" id="fb" aria-live="polite"></div><div class="row2" id="nx"></div></section>';
+      window.scrollTo(0,0);
+      window.__qans=function(j){
+        var ok=j===q.a;$$('#opts .btn').forEach(function(b){b.disabled=true;if(+b.dataset.q===q.a)b.classList.add('pri');});
+        if(ok){pts+=50;sfx.ok();}else{errs++;sfx.bad();}
+        fb(ok?'good':'bad',ok?'Exact : +50':'Raté',q.why);
+        $('#nx').innerHTML='<button class="btn pri" type="button" data-qn="1">'+(i===list.length-1?'Terminer':'Suivante')+'</button>';
+      };
+      window.__qnext=function(){if(i<list.length-1){i++;show();}else{award('qz',pts,errs);resolve();}};
+    }
+    show();
+  });
+}
+function dnaChart(){
+  var X0=64,X1=470,U=5.5;
+  function sx(u){return X0+(X1-X0)*u/U;}
+  function sy(v){return 200-75*v;}
+  var mit=[[0,1],[1.5,1],[2.5,2],[4,2],[4,1],[5.5,1]],mei=[[0,1],[1.5,1],[2.5,2],[4,2],[4,1],[5,1],[5,.5],[5.5,.5]];
+  function pd(a){return 'M'+a.map(function(p){return r1(sx(p[0]))+' '+r1(sy(p[1]));}).join('L');}
+  var o='<svg class="chart" viewBox="0 0 560 236" role="img" aria-labelledby="ct cd"><title id="ct">Quantité d\'ADN par cellule au cours du cycle</title><desc id="cd">Pour la mitose et pour la méiose : Q en G1, doublement à 2Q pendant la phase S, 2Q en G2. La mitose ramène la quantité à Q. La méiose la ramène à Q après la première division, puis à Q sur 2 après la seconde.</desc>';
+  [[.5,'Q/2'],[1,'Q'],[2,'2Q']].forEach(function(t){o+='<line x1="'+X0+'" x2="'+X1+'" y1="'+sy(t[0])+'" y2="'+sy(t[0])+'" stroke="rgba(236,230,214,.12)"/><text x="'+(X0-8)+'" y="'+(sy(t[0])+4)+'" text-anchor="end" font-family="Courier New,monospace" font-size="12" fill="#9a937c">'+t[1]+'</text>';});
+  [1.5,2.5,3.5,4.5].forEach(function(u){o+='<line x1="'+r1(sx(u))+'" x2="'+r1(sx(u))+'" y1="40" y2="200" stroke="rgba(236,230,214,.1)" stroke-dasharray="2 4"/>';});
+  o+='<line x1="'+X0+'" x2="'+X1+'" y1="200" y2="200" stroke="rgba(236,230,214,.4)"/>';
+  [[.75,'G1'],[2,'S'],[3,'G2'],[4,'M · M I'],[5,'M II']].forEach(function(t){o+='<text x="'+r1(sx(t[0]))+'" y="220" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="#ece6d6">'+t[1]+'</text>';});
+  o+='<path d="'+pd(mit)+'" fill="none" stroke="#f2b441" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>';
+  o+='<path d="'+pd(mei)+'" fill="none" stroke="#ece6d6" stroke-width="2.5" stroke-dasharray="7 5" stroke-linejoin="round"/>';
+  var ex=X1+8;
+  o+='<line x1="'+ex+'" x2="'+(ex+16)+'" y1="'+sy(1)+'" y2="'+sy(1)+'" stroke="#f2b441" stroke-width="3.5"/><text x="'+(ex+22)+'" y="'+(sy(1)+4)+'" font-family="Courier New,monospace" font-size="12" fill="#ece6d6">Mitose</text>';
+  o+='<line x1="'+ex+'" x2="'+(ex+16)+'" y1="'+sy(.5)+'" y2="'+sy(.5)+'" stroke="#ece6d6" stroke-width="2.5" stroke-dasharray="5 3"/><text x="'+(ex+22)+'" y="'+(sy(.5)+4)+'" font-family="Courier New,monospace" font-size="12" fill="#ece6d6">Méiose</text>';
+  return o+'</svg>';
+}
+function stEnd(){
+  SC=null;ACT=null;
+  var g=G(),tot=totalScore(),mx=maxTotal(),errs=0;for(var k in g.er)errs+=g.er[k];
+  var T=LV().crossing;
+  app.innerHTML='<section class="panel"><div class="tag">Fin de l\'histoire</div><h2 style="font-size:1.6rem;color:var(--amber2)">Diviser pour régner</h2>'+
+    '<p>Tu as suivi deux cellules d\'un même organisme. Toutes deux ont copié leur ADN en phase S. L\'une s\'est divisée par mitose, l\'autre par méiose, puis la fécondation a rétabli 2n. Voici ce qu\'il faut retenir.</p>'+
+    '<div class="row2"><span class="grade">'+rank()+'</span><span class="big">'+tot+' / '+mx+'</span><span class="dim">'+errs+' erreur'+(errs>1?'s':'')+'</span></div>'+
+    '<h3 style="font-size:1rem;color:var(--amber);margin:14px 0 4px">Mitose et méiose</h3>'+cmpTable()+
+    '<h3 style="font-size:1rem;color:var(--amber);margin:14px 0 4px">La quantité d\'ADN d\'une cellule au cours du cycle</h3>'+dnaChart()+
+    '<p class="small dim">Les deux courbes sont identiques jusqu\'à la fin de la première division. La mitose s\'arrête à Q ; la méiose continue et descend à Q/2 dans les gamètes.</p>'+
+    '<details class="small"><summary>Voir les valeurs du graphique</summary>'+tbl(['Étape','Mitose','Méiose'],[['G1','Q','Q'],['Phase S','Q → 2Q','Q → 2Q'],['G2','2Q','2Q'],['Fin de la mitose ou de la méiose I','Q','Q'],['Fin de la méiose II','-','Q/2']])+'</details>'+
+    '<div class="row2"><button class="btn pri" type="button" data-act="again">Rejouer</button><button class="btn" type="button" data-go="title">Changer de niveau</button></div></section>';
+  window.scrollTo(0,0);sfx.win();
+  return new Promise(function(){});
+}
+function cmpTable(){
+  var T=LV().crossing,rows=[['Phase S avant la division','1 réplication','1 réplication (aucune entre les 2 divisions)'],['Divisions','1','2'],['Cellules filles','2','4'],['Ploïdie des cellules filles','2n','n'],
+    ['Métaphase','chromosomes en file unique','M I : paires d\'homologues ; M II : file unique'],['Anaphase','séparation des chromatides','A I : homologues ; A II : chromatides'],
+    ['Cellule concernée','somatique','germinale']];
+  if(T)rows.push(['Cellules filles entre elles','identiques','génétiquement différentes (brassage)']);
+  return tbl(['','Mitose','Méiose'],rows);
+}
+
+/* =====================================================================
+   ÉCRANS
+   ===================================================================== */
+var SCREENS={};
+function titleArt(){
+  var tot=2*Math.PI,a=-Math.PI/2,gap=.08,o='<svg class="det" viewBox="0 0 220 220" role="img" aria-label="Le cycle cellulaire autour de deux chromosomes"><defs><radialGradient id="tg"><stop offset="0" stop-color="#f2b441" stop-opacity=".22"/><stop offset="1" stop-color="#f2b441" stop-opacity="0"/></radialGradient></defs><circle cx="110" cy="110" r="108" fill="url(#tg)"/>';
+  PH.forEach(function(k,i){
+    var a0=a+gap/2,a1=a+FR[k]*tot-gap/2;a+=FR[k]*tot;
+    o+='<path d="'+arcD(a0,a1,86,110)+'" fill="none" stroke="#f2b441" stroke-opacity="'+[.95,.7,.5,.32][i]+'" stroke-width="13"/>';
+    var tp=polar((a0+a1)/2,86,110);
+    o+='<text x="'+r1(tp[0])+'" y="'+r1(tp[1])+'" text-anchor="middle" dominant-baseline="central" font-family="Courier New,monospace" font-weight="700" font-size="11" fill="'+(i===0?'#150e00':'#ece6d6')+'">'+PLAB[k]+'</text>';
+  });
+  o+='<g transform="translate(110 110) rotate(18)"><path d="M-30 -46L30 46" stroke="#000" stroke-opacity=".6" stroke-width="17" stroke-linecap="round"/><path d="M30 -46L-30 46" stroke="#000" stroke-opacity=".6" stroke-width="17" stroke-linecap="round"/>'+
+    '<path d="M-30 -46L30 46" stroke="#ff5a4d" stroke-width="12" stroke-linecap="round"/><path d="M30 -46L-30 46" stroke="#3fa2ff" stroke-width="12" stroke-linecap="round"/><circle r="7" fill="#0a0a0e" stroke="#f4efe0" stroke-width="2"/></g></svg>';
+  return o;
+}
+SCREENS.title=function(){
+  var cards=['premiere','terminale'].map(function(k){
+    var l=DATA.levels[k],g=S.g[k],has=!!(g&&g.stage&&g.stage!=='g1A');
+    return '<div class="lvl"><b>'+esc(l.name)+' ('+l.cls+')</b><i>Niveau</i><span class="dim small">'+esc(l.desc)+'</span><div class="row2"><button type="button" class="btn pri small" data-play="'+k+'">'+(has?'Reprendre':'Jouer')+'</button>'+(has?'<button type="button" class="btn small" data-restart="'+k+'">Recommencer</button>':'')+'</div></div>';
+  }).join('');
+  app.innerHTML='<section class="title"><div class="sub">Le cycle cellulaire, de la mitose à la méiose</div><h1 class="logo-big">Diviser<br>pour régner</h1>'+titleArt()+
+    '<div class="panel" style="max-width:660px;margin:12px auto;text-align:left"><div class="speaker">FLEMMING&gt;</div><p id="mtxt"></p></div><div class="lvls">'+cards+'</div></section>';
+  say('Bienvenue. Je m\'appelle Flemming, et je serai ta voix dans la cellule. Une cellule ne se divise jamais au hasard : chaque division suit des règles précises, et une erreur peut lui coûter la vie. Ton rôle : accompagner deux cellules d\'un même organisme tout au long de leur cycle, copier leur ADN, aligner les chromosomes et vérifier que chaque cellule fille reçoit exactement ce qu\'il lui faut. Choisis ton niveau.');
+};
+SCREENS.play=function(){
+  if(!S.level){go('title');return;}
+  app.innerHTML=labHtml();renderCy();startRunner(story);
+};
+function memo(){
+  var T=LV().crossing;
+  $('#modal').innerHTML='<div class="ov" id="ov"><div class="modal" role="dialog" aria-modal="true"><h2>MÉMO</h2>'+
+  '<h3>Le cycle cellulaire (2n = 6)</h3>'+tbl(['Phase','Que se passe-t-il ?','Chromatides par chromosome','ADN'],[['G1','croissance, activité normale','1','Q'],['S','réplication de l\'ADN','1 → 2','Q → 2Q'],['G2','préparation à la division','2','2Q'],['M','mitose ou méiose (voir ci-dessous)','-','-']])+
+  '<h3>Compter sans se tromper</h3><ul class="plain"><li><b>Chromosomes</b> = nombre de centromères.</li><li><b>Chromatides</b> = 1 par chromosome avant la réplication, 2 après (jusqu\'à l\'anaphase).</li><li><b>Q</b> = quantité d\'ADN d\'une cellule diploïde avant la réplication. Après réplication : 2Q.</li></ul>'+
+  '<h3>Mitose et méiose</h3>'+cmpTable()+
+  '<h3>Appariement des bases</h3><p>A–T (2 liaisons hydrogène), C–G (3 liaisons hydrogène).</p>'+
+  '<h3>Astuce</h3><p>Les mots soulignés en pointillés, les enzymes dessinées et les phases du cycle donnent une définition quand on les touche.</p>'+
+  '<div class="row"><button class="btn pri" type="button" data-act="close">Fermer</button></div></div></div>';
+}
+SCREENS.about=function(){
+  app.innerHTML='<section class="panel"><div class="tag">Infos</div><h3>Ce que ce jeu simplifie</h3><ul class="plain">'+
+  '<li><b>Deux cellules, un organisme</b> : le jeu suit deux cellules différentes du même individu (une somatique, une germinale). Une cellule somatique ne devient pas germinale : c\'est pourquoi le choix de la première est grisé au second cycle.</li>'+
+  '<li>2n = 6 est un choix pédagogique. Les 6 chromosomes sont dessinés schématiquement, toujours condensés (en interphase, ils sont décondensés).</li>'+
+  '<li><b>Réplication</b> : on montre 6 paires de bases d\'un seul chromosome, avec les deux brins entièrement séparés. En réalité, la fourche s\'ouvre progressivement. Les amorces (primase) et les fragments d\'Okazaki du brin retardé ne sont pas représentés.</li>'+
+  '<li><b>Phase G2</b> : la vérification de la copie de l\'ADN et la préparation du fuseau ne sont pas détaillées.</li>'+
+  '<li><b>Cellule morte</b> : en vrai, c\'est le point de contrôle du fuseau qui bloque l\'anaphase ; si l\'erreur persiste, la cellule meurt (apoptose) ou produit des cellules à nombre anormal de chromosomes. Le jeu dramatise ce mécanisme.</li>'+
+  '<li>Dans le niveau <b>Première</b>, il n\'y a ni crossing-over ni allèles. La répartition des chromosomes rouges et bleus dans les gamètes dépend de l\'orientation que tu choisis, sans que le brassage soit étudié.</li>'+
+  '<li>Dans le niveau <b>Terminale</b>, un seul enjambement est possible par bivalent, et tous les gènes sont à l\'état hétérozygote.</li>'+
+  '<li>En méiose II, on suit une seule cellule ; l\'autre est simulée. Le fuseau de la 2e division est dessiné dans le même axe que le premier (en réalité, il est souvent perpendiculaire).</li>'+
+  '<li>Les cohésines, les kinétochores et la plupart des protéines du fuseau ne sont pas détaillés.</li></ul>'+
+  '<h3>Sources</h3><ul class="plain"><li>Programmes de SVT du cycle terminal (Première et Terminale spécialité).</li><li>Alberts et al., <i>Molecular Biology of the Cell</i>.</li><li>Walther Flemming (1843-1905), qui décrivit les chromosomes en division et introduisit le mot « mitose », prête son nom au narrateur.</li></ul>'+
+  '<h3>Auteur et licence</h3><p>Jeu créé par M. Scansetti, licence <a style="color:var(--amber)" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>. Les visuels, sons et polices sont générés par le code ; aucune ressource externe.</p>'+
+  '<h3>Options</h3><div class="row2"><button class="btn small" type="button" data-go="title">Changer de niveau</button><button class="btn small" type="button" data-act="reset">Effacer ma progression</button></div><p class="small dim">La progression est enregistrée dans ce navigateur (une par niveau). Rien n\'est envoyé nulle part.</p></section>';
+};
+
+/* ---------- jetons de nucléotides (glisser-déposer) ---------- */
+var NTD=null;
+function ntDown(e,b){
+  var nt=b.dataset.nt;REPSEL=nt;$$('.nt').forEach(function(x){x.classList.toggle('sel',x===b);});sfx.click();
+  var g=document.createElement('div');g.className='ghost';g.textContent=nt;g.style.background=BC[nt];g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';g.style.display='none';document.body.appendChild(g);
+  NTD={nt:nt,g:g,x:e.clientX,y:e.clientY,moved:false};
+}
+
+/* ---------- événements ---------- */
+document.addEventListener('keydown',function(){GEST=true;},{once:true});
+document.addEventListener('pointerdown',function(e){
+  GEST=true;ambient();
+  var nb=e.target.closest&&e.target.closest('.nt');
+  if(nb&&SC&&SC.mode==='rep'){ntDown(e,nb);return;}
+  if(!SC||!SC.h||!e.target.closest||!e.target.closest('#stage'))return;
+  var t=e.target,rec=null,c;
+  if((c=t.closest('[data-chr]')))rec={k:'chr',id:c.dataset.chr};
+  else if((c=t.closest('[data-slot]')))rec={k:'slot',id:c.dataset.slot};
+  else if((c=t.closest('[data-nslot]')))rec={k:'nslot',id:c.dataset.nslot};
+  if(!rec)return;
+  DR={rec:rec,x:e.clientX,y:e.clientY,moved:false,off:null};
+  if(rec.k==='chr'&&SC.h.drag){var ch=K(rec.id);if(ch){var p=svgPt(e);DR.off=[ch.u-p[0],ch.v-p[1]];try{$('#stage').setPointerCapture(e.pointerId);}catch(x){}}}
+});
+document.addEventListener('pointermove',function(e){
+  if(NTD){if(!NTD.moved&&Math.hypot(e.clientX-NTD.x,e.clientY-NTD.y)>8){NTD.moved=true;NTD.g.style.display='block';}if(NTD.moved){NTD.g.style.left=e.clientX+'px';NTD.g.style.top=e.clientY+'px';}return;}
+  if(!DR||!SC||!DR.off||!SC.h||!SC.h.drag)return;
+  if(!DR.moved&&Math.hypot(e.clientX-DR.x,e.clientY-DR.y)>7){
+    DR.moved=true;var c0=K(DR.rec.id);if(c0){if(c0.slot){freeSlot(c0);metaChanged();}c0.sel=false;SC.selId=null;SC.rowBad={};SC.chr.splice(SC.chr.indexOf(c0),1);SC.chr.push(c0);}
+  }
+  if(DR.moved){var c=K(DR.rec.id);if(c){var p=svgPt(e);c.u=p[0]+DR.off[0];c.v=p[1]+DR.off[1];draw();}}
+});
+function endPointer(e){
+  if(NTD){var d=NTD;NTD=null;d.g.remove();
+    if(d.moved){var el=document.elementFromPoint(e.clientX,e.clientY),s=el&&el.closest?el.closest('[data-nslot]'):null;
+      if(s&&SC&&SC.mode==='rep'){var sl=SC.slots.filter(function(x){return x.id===s.dataset.nslot;})[0];if(sl)repTry(sl,d.nt);}}
+    return;}
+  if(!DR)return;var d2=DR;DR=null;if(!SC||!SC.h)return;
+  if(d2.moved){var c=K(d2.rec.id);if(c&&SC.h.drop)SC.h.drop(c);}
+  else if(SC.h.tap)SC.h.tap(d2.rec.k,d2.rec.id);
+}
+document.addEventListener('pointerup',endPointer);
+document.addEventListener('pointercancel',function(){if(NTD){NTD.g.remove();NTD=null;}DR=null;});
+document.addEventListener('click',function(e){
+  var t=e.target;if(!t.closest)return;var m;
+  if((m=t.closest('[data-term]'))&&!t.closest('#tip')){e.stopPropagation();showTip(m);return;}
+  if(!t.closest('#tip'))hideTip();
+  if(t.id==='mok'&&MOK){MOK();return;}
+  if((m=t.closest('[data-a]'))){if(!ACT)return;var b=ACT.list.filter(function(x){return x.id===m.dataset.a;})[0];if(!b)return;sfx.click();if(b.fn){b.fn();return;}var r=ACT.res;ACT=null;renderActions();if(r)r(b.id);return;}
+  if((m=t.closest('[data-play]'))){S.level=m.dataset.play;save();sfx.click();go('play');return;}
+  if((m=t.closest('[data-restart]'))){var rk=m.dataset.restart;$('#modal').innerHTML='<div class="ov"><div class="modal"><h2>Recommencer ?</h2><p>La progression de ce niveau sera effacée.</p><div class="row"><button class="btn" type="button" data-act="close">Annuler</button><button class="btn pri" type="button" data-restart2="'+rk+'">Recommencer</button></div></div></div>';return;}
+  if((m=t.closest('[data-restart2]'))){var rk2=m.dataset.restart2;S.g[rk2]=null;S.level=rk2;save();$('#modal').innerHTML='';go('play');return;}
+  if((m=t.closest('[data-q]'))){if(window.__qans)window.__qans(+m.dataset.q);return;}
+  if(t.closest('[data-qn]')){if(window.__qnext)window.__qnext();return;}
+  if((m=t.closest('[data-go]'))){sfx.click();go(m.dataset.go);return;}
+  if((m=t.closest('[data-act]'))){
+    var a=m.dataset.act;
+    if(a==='memo')memo();else if(a==='close')$('#modal').innerHTML='';
+    else if(a==='sound'){S.sound=!S.sound;save();updSound();if(S.sound)ambient();}
+    else if(a==='again'){S.g[S.level]=null;save();go('play');}
+    else if(a==='reset'){$('#modal').innerHTML='<div class="ov"><div class="modal"><h2>Effacer ?</h2><p>Les scores et la progression des deux niveaux seront perdus.</p><div class="row"><button class="btn" type="button" data-act="close">Annuler</button><button class="btn pri" type="button" data-act="reset2">Effacer</button></div></div></div>';}
+    else if(a==='reset2'){var snd=S.sound;S=def();S.sound=snd;save();$('#modal').innerHTML='';go('title');}
+    return;
+  }
+  if(t.id==='ov')$('#modal').innerHTML='';
+});
+document.addEventListener('mouseover',function(e){var m=e.target.closest&&e.target.closest('.term,[data-term]');if(m&&window.matchMedia&&window.matchMedia('(hover:hover)').matches)showTip(m);});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){hideTip();if($('#ov')&&!MOK)$('#modal').innerHTML='';return;}
+  if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.hasAttribute&&e.target.hasAttribute('data-term')&&e.target.tagName!=='BUTTON'){e.preventDefault();showTip(e.target);return;}
+  if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.getAttribute&&SC&&SC.h){
+    var t=e.target,k=null,id=null;
+    if(t.hasAttribute('data-chr')){k='chr';id=t.getAttribute('data-chr');}else if(t.hasAttribute('data-slot')){k='slot';id=t.getAttribute('data-slot');}else if(t.hasAttribute('data-nslot')){k='nslot';id=t.getAttribute('data-nslot');}
+    if(k&&SC.h.tap){e.preventDefault();SC.h.tap(k,id);}
+  }
+});
+var rt=null;
+window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){var o=ORI;setOri();if(o!==ORI&&SC){if(SC.mode==='rep')seaInit();draw();}},120);});
+window.addEventListener('scroll',hideTip,{passive:true});
+
+updSound();go('title');
+window.__CS={G:G,CY:function(){return CY;},S:function(){return S;},SC:function(){return SC;},go:go,K:K,DATA:DATA,RUN:function(){return RUN;}};
+})();
+</script>
+</body>
+</html>
